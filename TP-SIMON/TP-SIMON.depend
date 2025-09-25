@@ -1,10 +1,11 @@
 # depslib dependency file v1.0
-1758733161 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\main.c
+1758755746 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\main.c
 	"tp-simon.h"
 
-1758733037 c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\tp-simon.h
+1758753063 c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\tp-simon.h
 	<stdio.h>
 	<stdlib.h>
+	<stdbool.h>
 	<SDL2/SDL.h>
 	<SDL2/SDL_mixer.h>
 
@@ -459,6 +460,6 @@
 	"begin_code.h"
 	"close_code.h"
 
-1758732352 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\tp-simon.c
+1758753142 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\tp-simon.c
 	"tp-simon.h"
 
