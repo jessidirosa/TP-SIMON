@@ -1,29 +1,38 @@
 #include "juego.h"
 
-void iniciarJuego(tPartida* juego) //comienza la partida
+void inicializarPartida(tPartida* juego)
 {
-    //todo esto podria estar una funcion iniciarPartida
     //el nombre del jugador ya llega en la struct
     juego->psec = juego->sec;
     juego->ranking->score = 0;
     juego->estado = CONTINUA;
     juego->tiempoNota = TIEMPO_INICIAL; //puede que ya llegue a la funcion con esto ya asignado porque se cambia en la configuracion
     juego->acoteDuracion = TIEMPO_ACOTADO_POR_NOTA;
+}
 
-    while(juego->estado != GAMEOVER)
+void iniciarJuego(tPartida* juego) //comienza la partida
+{
+    while(!finalizarJuego(juego)) //devolvera 1 cuando se presione "Salir" u otra cosa
     {
-        secuencia(juego); //mostrara la secuencia desde sec a psec a medida que avanza
+        inicializarPartida(juego);
 
-        if(respuesta(juego) == ERROR) //registrara la respuesta del jugador y la ira guardando en res hasta detectar un error en el patron
-            juego->estado = GAMEOVER;
-
-        else
+        while(juego->estado != GAMEOVER)
         {
-            juego->ranking->score++;
-            juego->psec++;
-            disminuirTiempo(juego);
+            secuencia(juego); //mostrara la secuencia desde sec a psec a medida que avanza. el vector sec ya tendra en numeros la secuencia con el modo y los tonos definidos previamente en config
+
+            if(respuesta(juego) == ERROR) //registrara la respuesta del jugador y la ira guardando en res hasta detectar un error en el patron
+                juego->estado = GAMEOVER;
+
+            else
+            {
+                juego->ranking->score++;
+                juego->psec++;
+                disminuirTiempo(juego);
+            }
         }
     }
+
+
 }
 
 //hacer funcion de crearArchivoRanking y ordenarArchivo
@@ -47,3 +56,5 @@ bool insertarArchivoRankingSinDup(tPartida* juego)
 
     return true; //todo ok
 }
+
+

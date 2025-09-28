@@ -44,6 +44,9 @@ typedef struct
 
 } tPartida;
 
+void inicializarPartida(tPartida* juego);
+void iniciarJuego(tPartida* juego);
+bool insertarArchivoRankingSinDup(tPartida* juego);
 
 
 #endif // JUEGO_H_INCLUDED
