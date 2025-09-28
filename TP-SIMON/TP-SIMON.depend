@@ -474,8 +474,12 @@
 1759084291 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\sdl.c
 	"sdl.h"
 
-1759084393 c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\juego.h
+1759091039 c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\juego.h
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
+	<string.h>
+
+1759091018 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\juego.c
+	"juego.h"
 
