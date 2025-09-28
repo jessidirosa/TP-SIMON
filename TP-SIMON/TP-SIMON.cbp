@@ -51,13 +51,17 @@
 			<Add option="-lSDL2_mixer" />
 			<Add library="lib/SDL2_mixer-2.8.1/x86_64-w64-mingw32/lib/libSDL2_mixer.dll.a" />
 		</Linker>
+		<Unit filename="juego.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="juego.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="tp-simon.c">
+		<Unit filename="sdl.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="tp-simon.h" />
+		<Unit filename="sdl.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

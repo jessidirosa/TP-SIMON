@@ -1,4 +1,5 @@
-#include "tp-simon.h"
+#include "sdl.h"
+#include "juego.h"
 
 int main(int argc, char* argv[])
 {

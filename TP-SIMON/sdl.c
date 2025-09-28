@@ -1,4 +1,4 @@
-#include "tp-simon.h"
+#include "sdl.h"
 
 bool sdl_inicializar(tJuego* juego)
 {
@@ -45,3 +45,4 @@ void sdl_limpiar(tJuego* juego)
     SDL_Quit();
     return;
 }
+
