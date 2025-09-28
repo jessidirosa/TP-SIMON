@@ -1,4 +1,7 @@
+#include "dibujos.h"
 #include "sdl.h"
+#include "juego.h"
+#include "sonidos.h"
 
 bool sdl_inicializar(tJuego* juego)
 {
@@ -34,6 +37,8 @@ bool sdl_inicializar(tJuego* juego)
 
     return true;
 }
+
+
 
 void sdl_limpiar(tJuego* juego)
 {

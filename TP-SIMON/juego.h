@@ -14,18 +14,6 @@
 #define TIEMPO_INICIAL 2000
 #define TIEMPO_ACOTADO_POR_NOTA 0.03
 
-typedef struct {
-    int rojo; //1
-    int verde; //2
-    int azul; //3
-    int amarillo; //4
-    int violeta; //5
-    int naranja; //6
-    int rosa; //7
-    int celeste; //8
-
-}tBoton;
-
 typedef struct
 {
     char jugador[MAX_NOMBRE];

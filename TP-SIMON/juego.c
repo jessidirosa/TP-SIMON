@@ -1,4 +1,6 @@
+#include "sdl.h"
 #include "juego.h"
+#include "sonidos.h"
 
 void inicializarPartida(tPartida* juego)
 {
@@ -9,31 +11,30 @@ void inicializarPartida(tPartida* juego)
     juego->tiempoNota = TIEMPO_INICIAL; //puede que ya llegue a la funcion con esto ya asignado porque se cambia en la configuracion
     juego->acoteDuracion = TIEMPO_ACOTADO_POR_NOTA;
 }
-
-void iniciarJuego(tPartida* juego) //comienza la partida
-{
-    while(!finalizarJuego(juego)) //devolvera 1 cuando se presione "Salir" u otra cosa
-    {
-        inicializarPartida(juego);
-
-        while(juego->estado != GAMEOVER)
-        {
-            secuencia(juego); //mostrara la secuencia desde sec a psec a medida que avanza. el vector sec ya tendra en numeros la secuencia con el modo y los tonos definidos previamente en config
-
-            if(respuesta(juego) == ERROR) //registrara la respuesta del jugador y la ira guardando en res hasta detectar un error en el patron
-                juego->estado = GAMEOVER;
-
-            else
-            {
-                juego->ranking->score++;
-                juego->psec++;
-                disminuirTiempo(juego);
-            }
-        }
-    }
-
-
-}
+//
+//void iniciarJuego(tPartida* juego) //comienza la partida
+//{
+//    while(!finalizarJuego(juego)) //devolvera 1 cuando se presione "Salir" u otra cosa
+//    {
+//        inicializarPartida(juego);
+//
+//        while(juego->estado != GAMEOVER)
+//        {
+//            //ver circularidad de secuencia para que sea continua hasta que el jugador pierda (resize de vector)
+//            secuencia(juego); //mostrara la secuencia desde sec a psec a medida que avanza. el vector sec ya tendra en numeros la secuencia con el modo y los tonos definidos previamente en config
+//
+//            if(respuesta(juego) == ERROR) //registrara la respuesta del jugador y la ira guardando en res hasta detectar un error en el patron
+//                juego->estado = GAMEOVER;
+//
+//            else
+//            {
+//                juego->ranking->score++;
+//                juego->psec++;
+//                disminuirTiempo(juego);
+//            }
+//        }
+//    }
+//}
 
 //hacer funcion de crearArchivoRanking y ordenarArchivo
 bool insertarArchivoRankingSinDup(tPartida* juego)

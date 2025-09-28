@@ -1,5 +1,7 @@
+#include "dibujos.h"
 #include "sdl.h"
 #include "juego.h"
+#include "sonidos.h"
 
 int main(int argc, char* argv[])
 {
@@ -11,6 +13,13 @@ int main(int argc, char* argv[])
         sdl_limpiar(&juego);
         return ERROR_INICIALIZACION;
     }
+
+    // Inicializa SDL_mixer
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+        printf("[ERROR] No se pudo inicializar el audio: %s\n", Mix_GetError());
+
+    Mix_Chunk* sonido = cargarSonido("sonidos/sonido.wav");
+    Mix_Chunk* tono = crearTono(440.0f);
 
     while(true)
     {
@@ -39,11 +48,11 @@ int main(int argc, char* argv[])
         //limpia el lienzo
         SDL_RenderClear(juego.render);
 
+
+
         //presenta lo hecho en el (todavia nada)
         SDL_RenderPresent(juego.render);
 
-        //solo es un delay para ver que aparece una ventana simplemente
-        SDL_Delay(16);
         //sin chequear el evento de quit, la ventana pasados los 5 segundos se cierra. precisamos captar esos eventos
         //para decidir que hacer con ellos
     }
