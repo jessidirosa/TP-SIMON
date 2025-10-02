@@ -8,8 +8,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
 
-#define ALTO_VENTANA 1000
-#define ANCHO_VENTANA 1000
+#define ALTO_VENTANA 480
+#define ANCHO_VENTANA 480
 #define ERROR_INICIALIZACION -1;
 
 
@@ -17,6 +17,11 @@ typedef struct
 {
     SDL_Window* ventana;
     SDL_Renderer* render;
+    SDL_Surface* surface;
+    SDL_Texture* fondo;
+    unsigned botones;
+    int mx; //coordenada x del mouse
+    int my; //coordenada y del mouse
 
 } tJuego;
 

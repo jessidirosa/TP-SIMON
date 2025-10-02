@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1759095878 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\main.c
+1759375683 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\main.c
 	"dibujos.h"
 	"sdl.h"
 	"juego.h"
@@ -466,26 +466,26 @@
 1758753142 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\tp-simon.c
 	"tp-simon.h"
 
-1758753063 c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\sdl.h
+1759373019 c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\sdl.h
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
 	<SDL2/SDL.h>
 	<SDL2/SDL_mixer.h>
 
-1759095670 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\sdl.c
+1759376762 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\sdl.c
 	"dibujos.h"
 	"sdl.h"
 	"juego.h"
 	"sonidos.h"
 
-1759095094 c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\juego.h
+1759372962 c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\juego.h
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
 	<string.h>
 
-1759093735 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\juego.c
+1759350312 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\juego.c
 	"sdl.h"
 	"juego.h"
 	"sonidos.h"
@@ -499,11 +499,13 @@
 	"juego.h"
 	"sonidos.h"
 
-1759095786 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\dibujos.c
+1759377340 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\dibujos.c
 	"dibujos.h"
 	"sdl.h"
 	"juego.h"
 	"sonidos.h"
 
-1759096293 c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\dibujos.h
+1759377564 c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\dibujos.h
+	<math.h>
+	"sdl.h"
 

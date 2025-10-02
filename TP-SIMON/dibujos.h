@@ -1,17 +1,26 @@
 #ifndef DIBUJOS_H_INCLUDED
 #define DIBUJOS_H_INCLUDED
 
-#define N 0 // Negro
-#define AM 1 // Amarillo
-#define BL 2 // Blanco
-#define V 3 // Verde
-#define R 4 // Rojo
-#define T 5 // Transparente
-#define VI 6 // Violeta
-#define RO 7 // Rosa
-#define NA 8 // Naranja
-#define AZ 9 // Azul
+#include <math.h>
+#include "sdl.h"
 
+#define AM 0
+#define V 1
+#define R 2
+#define AZ 3
+#define VI 4
+#define RO 5
+#define NA 6
+#define N 7
+#define BL 8
+#define T 9
 
+#define MAT_COL 50
+#define MAT_FILA 50
+#define R_INT 5
+#define R_EXT 15
+#define TAM_PIXEL 4
+
+void dibujar(tJuego* juego);
 
 #endif // DIBUJOS_H_INCLUDED

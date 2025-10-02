@@ -12,7 +12,7 @@ bool sdl_inicializar(tJuego* juego)
     }
 
     ///ventana: puntero a la ventana que creamos
-    juego->ventana = SDL_CreateWindow("SIMON GAME", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, ALTO_VENTANA, ANCHO_VENTANA, 0);
+    juego->ventana = SDL_CreateWindow("SIMON GAME", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, ANCHO_VENTANA, ALTO_VENTANA, 0);
     if(!juego->ventana)
     {
         printf("Error creando ventana: %s\n", SDL_GetError());
@@ -27,13 +27,30 @@ bool sdl_inicializar(tJuego* juego)
 
      //SDL trabaja con renderers para dibujar.
     //Un renderer está ligado a una ventana y se encarga de usar la GPU (si hay) o software para pintar
-    ///rend: lienzo para dibujar
+    ///render: lienzo para dibujar
     juego->render = SDL_CreateRenderer(juego->ventana, -1, SDL_RENDERER_ACCELERATED);
     if(!juego->render)
     {
         printf("Error creando render: %s\n", SDL_GetError());
         return false;
     }
+
+    SDL_SetRenderDrawBlendMode(juego->render, SDL_BLENDMODE_BLEND);
+
+    //crea surface, carga a ram el archivo bmp
+    juego->surface = SDL_LoadBMP("fondo.bmp");
+
+    if (!juego->surface)
+        SDL_Log("No se pudo cargar BMP: %s", SDL_GetError());
+
+
+    juego->fondo = SDL_CreateTextureFromSurface(juego->render, juego->surface);
+    if (!juego->fondo)
+        SDL_Log("No se pudo crear fondo: %s", SDL_GetError());
+
+
+    SDL_FreeSurface(juego->surface);  // ya no se necesita (queda la Texture)
+
 
     return true;
 }
@@ -50,4 +67,5 @@ void sdl_limpiar(tJuego* juego)
     SDL_Quit();
     return;
 }
+
 

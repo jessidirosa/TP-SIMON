@@ -7,6 +7,9 @@ int main(int argc, char* argv[])
 {
     tJuego juego;
     SDL_Event evento;
+    bool corriendo = true;
+    Mix_Chunk* sonido;
+    Mix_Chunk* tono;
 
     if(!sdl_inicializar(&juego))
     {
@@ -18,17 +21,19 @@ int main(int argc, char* argv[])
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
         printf("[ERROR] No se pudo inicializar el audio: %s\n", Mix_GetError());
 
-    Mix_Chunk* sonido = cargarSonido("sonidos/sonido.wav");
-    Mix_Chunk* tono = crearTono(440.0f);
+    sonido = cargarSonido("sonidos/sonido.wav");
+    tono = crearTono(440.0f);
 
-    while(true)
+    while(corriendo)
     {
+        //precisamos captar cada evento
+        //para decidir que hacer con el
         while(SDL_PollEvent(&evento)) //se usa para sacar todos los eventos que van ocurriendo y ver que hacemos uno por uno
         {
             switch (evento.type)
             {
             case SDL_QUIT: //sale cuando se toca la X para cerrar la pestaña
-                sdl_limpiar(&juego);
+                corriendo = false;
                 break;
             default:
                 break;
@@ -37,24 +42,27 @@ int main(int argc, char* argv[])
                 switch(evento.key.keysym.scancode) //puntualmanete una letra especifica, esta en todo ese enjambre de structs
                 {
                 case SDL_SCANCODE_ESCAPE: //la tecla ESC
-                    sdl_limpiar(&juego);
+                    corriendo = false;
                     break;
                 default:
                     break;
                 }
+
+            case SDL_MOUSEBUTTONDOWN://guardamos coordenadas de a donde toco para iluminar boton y ver si esta bien o no
+                juego.mx = evento.button.x;
+                juego.my = evento.button.y;
             }
         }
 
         //limpia el lienzo
         SDL_RenderClear(juego.render);
 
-
-
-        //presenta lo hecho en el (todavia nada)
+        //pega fondo en el render
+        SDL_RenderCopy(juego.render, juego.fondo, NULL, NULL);
+        dibujar(&juego);
+        //presenta lo hecho en el render
         SDL_RenderPresent(juego.render);
-
-        //sin chequear el evento de quit, la ventana pasados los 5 segundos se cierra. precisamos captar esos eventos
-        //para decidir que hacer con ellos
+        SDL_Delay(16);
     }
 
     sdl_limpiar(&juego);
