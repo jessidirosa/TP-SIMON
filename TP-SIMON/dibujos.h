@@ -11,16 +11,17 @@
 #define VI 4
 #define RO 5
 #define NA 6
-#define N 7
+#define CE 7
 #define BL 8
 #define T 9
 
-#define MAT_COL 50
-#define MAT_FILA 50
-#define R_INT 5
-#define R_EXT 15
-#define TAM_PIXEL 4
+#define MAT_COL 200
+#define MAT_FILA 200
+#define R_INT 15
+#define R_EXT 80
+#define TAM_PIXEL 1
 
 void dibujar(tJuego* juego);
+int** crearMatriz(int cf, int cc, size_t tam);
 
 #endif // DIBUJOS_H_INCLUDED

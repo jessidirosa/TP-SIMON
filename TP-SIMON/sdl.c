@@ -24,6 +24,7 @@ bool sdl_inicializar(tJuego* juego)
 //    sino que se las delegue a la GPU / placa de video, que está especializada para eso
 //    un rendered para dibujar se puede crear en sw (mas lento) o hw (mas rapido), por eso es este flag
 
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 
      //SDL trabaja con renderers para dibujar.
     //Un renderer está ligado a una ventana y se encarga de usar la GPU (si hay) o software para pintar
@@ -36,6 +37,11 @@ bool sdl_inicializar(tJuego* juego)
     }
 
     SDL_SetRenderDrawBlendMode(juego->render, SDL_BLENDMODE_BLEND);
+
+    int ancho_log = MAT_COL * TAM_PIXEL;
+    int alto_log = MAT_FILA * TAM_PIXEL;
+
+    SDL_RenderSetLogicalSize(juego->render, ancho_log, alto_log);
 
     //crea surface, carga a ram el archivo bmp
     juego->surface = SDL_LoadBMP("fondo.bmp");

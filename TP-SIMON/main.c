@@ -51,6 +51,8 @@ int main(int argc, char* argv[])
             case SDL_MOUSEBUTTONDOWN://guardamos coordenadas de a donde toco para iluminar boton y ver si esta bien o no
                 juego.mx = evento.button.x;
                 juego.my = evento.button.y;
+                printf("Click detectado en: %d %d\n", juego.mx, juego.my);
+                break;
             }
         }
 
@@ -59,6 +61,7 @@ int main(int argc, char* argv[])
 
         //pega fondo en el render
         SDL_RenderCopy(juego.render, juego.fondo, NULL, NULL);
+        juego.botones = 8;
         dibujar(&juego);
         //presenta lo hecho en el render
         SDL_RenderPresent(juego.render);
