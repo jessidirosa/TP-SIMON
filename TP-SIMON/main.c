@@ -52,6 +52,11 @@ int main(int argc, char* argv[])
                 juego.mx = evento.button.x;
                 juego.my = evento.button.y;
                 printf("Click detectado en: %d %d\n", juego.mx, juego.my);
+
+//                if(botonSeleccionar(&juego) > 0)
+//                    IluminarBoton(botonSeleccionar(&juego));
+
+                printf("Boton seleccionado: %d\n\n", botonSeleccionar(&juego));
                 break;
             }
         }
@@ -61,8 +66,9 @@ int main(int argc, char* argv[])
 
         //pega fondo en el render
         SDL_RenderCopy(juego.render, juego.fondo, NULL, NULL);
-        juego.botones = 8;
+        juego.botones = 6;
         dibujar(&juego);
+        dibujarBordes(&juego);
         //presenta lo hecho en el render
         SDL_RenderPresent(juego.render);
         SDL_Delay(16);

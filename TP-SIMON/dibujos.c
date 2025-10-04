@@ -5,15 +5,15 @@
 
 SDL_Color colores[] =
 {
-    {255, 255, 0,   255}, // AM[0] - Amarillo
-    {0,   150, 60,  255}, // V[1] - Verde
-    {255,   0,  0,  255}, // R[2] - Rojo
-    {0,   0,  255,  255}, // AZ[3] - Azul
-    {128,   0,  255,  255}, // VI[4] - Violeta
-    {255,   192,  203,  255}, // RO[5] - Rosa
-    {255,   165,  0,  255}, // NA[6] - Naranja
-    {178, 255, 255, 255}, // CE[7] - Celeste
-    {255, 255, 255, 255}, // BL[8] - Blanco
+    {255, 255, 0,   200}, // AM[0] - Amarillo
+    {0,   150, 60,  200}, // V[1] - Verde
+    {255,   0,  0,  200}, // R[2] - Rojo
+    {0,   0,  255,  200}, // AZ[3] - Azul
+    {128,   0,  255,  200}, // VI[4] - Violeta
+    {255,   192,  203,  200}, // RO[5] - Rosa
+    {255,   165,  0,  200}, // NA[6] - Naranja
+    {178, 255, 255, 200}, // CE[7] - Celeste
+    {255, 255, 255, 200}, // BL[8] - Blanco
     {0,   0,  0,  0} // T[9] - Transparente
 };
 
@@ -71,9 +71,43 @@ void dibujar(tJuego* juego)
                 SDL_Rect pixel = {TAM_PIXEL*j, TAM_PIXEL*i, TAM_PIXEL, TAM_PIXEL};
                 SDL_RenderFillRect(juego->render, &pixel);
             }
-
         }
     }
+}
+
+//void IluminarBoton(tJuego* juego)
+//{
+//    double ang_boton = (2 * M_PI)/juego->botones;
+//    double cx = ((MAT_COL-1)/2);
+//    double cy = ((MAT_FILA-1)/2);
+//    double r_brillo = R_INT;
+//
+//}
+void dibujarBordes(tJuego* juego)
+{
+    double ang_boton = (2 * M_PI)/juego->botones;
+    double x1, x2, y1, y2, ang;
+    double cx = ((MAT_COL-1)/2);
+    double cy = ((MAT_FILA-1)/2);
+    int i;
+
+    SDL_SetRenderDrawColor(juego->render, 205, 205, 205, 255);
+
+    for(i=0; i<juego->botones; i++)
+    {
+        ang = i * ang_boton;
+        x1 = cx + (R_INT * cos(ang));
+        x2 = cx + (R_EXT * cos(ang));
+        y1 = cy + (R_INT * sin(ang));
+        y2 = cy + (R_EXT * sin(ang));
+        SDL_RenderDrawLine(juego->render, x1, y1, x2, y2);
+        SDL_RenderDrawLine(juego->render, x1, y1, x2, y2);
+        SDL_RenderDrawLine(juego->render, x1+0.25, y1+0.25, x2+0.25, y2+0.25);
+        SDL_RenderDrawLine(juego->render, x1+0.5, y1+0.5, x2+0.5, y2+0.5);
+        SDL_RenderDrawLine(juego->render, x1+1, y1+1, x2+1, y2+1);
+
+    }
+
 }
 
 int** crearMatriz(int cf, int cc, size_t tam)

@@ -1,6 +1,9 @@
 #include "sdl.h"
 #include "juego.h"
 #include "sonidos.h"
+#include "dibujos.h"
+
+
 
 void inicializarPartida(tPartida* juego)
 {
@@ -58,4 +61,55 @@ bool insertarArchivoRankingSinDup(tPartida* juego)
     return true; //todo ok
 }
 
+//llamada por funcion respuesta
+int botonSeleccionar(tJuego* juego)
+{
+    double cx = ((MAT_COL-1)/2);
+    double cy = ((MAT_FILA-1)/2);
+    double r_medio = (R_EXT - R_INT) / 2;
+    double ang_boton = (2 * M_PI)/juego->botones;
+    double ang_centro;
+    double dx, dy;
 
+    int i;
+
+    tBoton* centro = malloc(sizeof(tBoton) * juego->botones);
+    if(!centro)
+        return ERROR; //ver
+
+    double dist = sqrt((cx - juego->mx) * (cx - juego->mx) + (cy - juego->my) * (cy - juego->my));
+    if(dist < R_INT || dist > R_EXT)
+        return ERROR;
+
+    tBoton* boton = centro;
+    tBoton* menor = centro;
+    tBoton* fin = centro + juego->botones; //primer invalido
+
+    for(i=0; i<juego->botones; i++)
+    {
+        boton->num = i; //coincidira con el color (macro)
+        ang_centro = (i + 0.5) * ang_boton;
+        boton->x = cx + (r_medio * cos(ang_centro));
+        boton->y = cy + (r_medio * sin(ang_centro));
+        dx = juego->mx - boton->x;
+        dy = juego->my - boton->y;
+        boton->distClick = sqrt(dx * dx + dy * dy);
+        boton++;
+    }
+
+    boton = centro + 1;
+    while(boton < fin)
+    {
+        if(esMenor(menor->distClick, boton->distClick))
+            menor = boton;
+
+        boton++;
+    }
+
+    return menor->num + 1;
+}
+
+bool esMenor(double actual, double nuevo)
+{
+    return (nuevo - actual) > 0 ? false : true;
+}

@@ -23,5 +23,6 @@
 
 void dibujar(tJuego* juego);
 int** crearMatriz(int cf, int cc, size_t tam);
+void dibujarBordes(tJuego* juego);
 
 #endif // DIBUJOS_H_INCLUDED

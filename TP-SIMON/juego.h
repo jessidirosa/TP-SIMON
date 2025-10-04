@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <math.h>
 
 #define MAX 1024
 #define MAX_NOMBRE 20
@@ -13,6 +14,7 @@
 #define CONTINUA 1
 #define TIEMPO_INICIAL 2000
 #define TIEMPO_ACOTADO_POR_NOTA 0.03
+#define MAX_BOTON 8
 
 typedef struct
 {
@@ -32,9 +34,22 @@ typedef struct
 
 } tPartida;
 
+typedef struct
+{
+    int num; //1, 2, 3, 4, 5, 6, 7, 8
+    double x;
+    double y;
+    double distClick;
+    bool encendido;
+    int duracion_flash; //tiempo que dura encendido
+    int sonido;
+} tBoton;
+
 void inicializarPartida(tPartida* juego);
 void iniciarJuego(tPartida* juego);
 bool insertarArchivoRankingSinDup(tPartida* juego);
+int botonSeleccionar(tJuego* juego);
+bool esMenor(double actual, double nuevo);
 
 
 #endif // JUEGO_H_INCLUDED
