@@ -53,8 +53,8 @@ int main(int argc, char* argv[])
                 juego.my = evento.button.y;
                 printf("Click detectado en: %d %d\n", juego.mx, juego.my);
 
-//                if(botonSeleccionar(&juego) > 0)
-//                    IluminarBoton(botonSeleccionar(&juego));
+                if(botonSeleccionar(&juego) > 0)
+                    IluminarBoton(botonSeleccionar(&juego), &juego);
 
                 printf("Boton seleccionado: %d\n\n", botonSeleccionar(&juego));
                 break;

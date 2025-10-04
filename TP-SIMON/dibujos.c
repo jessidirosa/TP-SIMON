@@ -73,16 +73,46 @@ void dibujar(tJuego* juego)
             }
         }
     }
+
+    free(mat); //hacer destruirMatriz
 }
 
-//void IluminarBoton(tJuego* juego)
-//{
-//    double ang_boton = (2 * M_PI)/juego->botones;
-//    double cx = ((MAT_COL-1)/2);
-//    double cy = ((MAT_FILA-1)/2);
-//    double r_brillo = R_INT;
-//
-//}
+void IluminarBoton(int boton, tJuego* juego)
+{
+    double ang_boton = (2 * M_PI)/juego->botones;
+    double cx = ((MAT_COL-1)/2);
+    double cy = ((MAT_FILA-1)/2);
+    int i, j;
+    double dx, dy, ang;
+
+    int **mat = crearMatriz(MAT_FILA, MAT_COL, sizeof(int));
+    if(!mat)
+        return;
+
+    for(i=0;i<MAT_FILA;i++)
+    {
+        for(j=0;j<MAT_COL;j++)
+        {
+            dx = j - cx;
+            dy = i - cy;
+
+            ang = atan2(dy, dx);
+            if(ang < 0)
+                ang += (2 * M_PI); //una vuelta mas para que quede positivo
+
+            mat[i][j] = (int)(ang / ang_boton);
+            if(mat[i][j] == boton)
+                {
+                    SDL_SetRenderDrawColor(juego->render, 255, 255, 255, 5);
+                    SDL_Rect pixel = {TAM_PIXEL*j, TAM_PIXEL*i, TAM_PIXEL, TAM_PIXEL};
+                    SDL_RenderFillRect(juego->render, &pixel);
+                }
+        }
+    }
+
+
+
+}
 void dibujarBordes(tJuego* juego)
 {
     double ang_boton = (2 * M_PI)/juego->botones;
