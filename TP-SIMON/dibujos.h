@@ -21,9 +21,9 @@
 #define R_EXT 80
 #define TAM_PIXEL 1
 
-void dibujar(tJuego* juego);
+void dibujar(tJuego* juego, int** mat);
 int** crearMatriz(int cf, int cc, size_t tam);
 void dibujarBordes(tJuego* juego);
-void IluminarBoton(int boton, tJuego* juego);
+void iluminarBoton(int boton, tJuego* juego, int** mat);
 
 #endif // DIBUJOS_H_INCLUDED

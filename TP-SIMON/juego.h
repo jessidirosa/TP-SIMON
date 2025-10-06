@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <math.h>
+#include <time.h>
 
 #define MAX 1024
 #define MAX_NOMBRE 20
@@ -24,7 +25,7 @@ typedef struct
 
 typedef struct
 {
-    int sec[MAX];
+    int* sec;
     int* psec;
     int res[MAX];
     tRanking* ranking;
@@ -50,6 +51,8 @@ void iniciarJuego(tPartida* juego);
 bool insertarArchivoRankingSinDup(tPartida* juego);
 int botonSeleccionar(tJuego* juego);
 bool esMenor(double actual, double nuevo);
+void crearSecuenciaAleatoria(tPartida* partida);
+void secuenciaJuego(tPartida* partida, tJuego* juego, int** mat);
 
 
 #endif // JUEGO_H_INCLUDED

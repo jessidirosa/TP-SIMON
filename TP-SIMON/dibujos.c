@@ -5,24 +5,20 @@
 
 SDL_Color colores[] =
 {
-    {255, 255, 0,   200}, // AM[0] - Amarillo
-    {0,   150, 60,  200}, // V[1] - Verde
-    {255,   0,  0,  200}, // R[2] - Rojo
-    {0,   0,  255,  200}, // AZ[3] - Azul
-    {128,   0,  255,  200}, // VI[4] - Violeta
-    {255,   192,  203,  200}, // RO[5] - Rosa
-    {255,   165,  0,  200}, // NA[6] - Naranja
-    {178, 255, 255, 200}, // CE[7] - Celeste
-    {255, 255, 255, 200}, // BL[8] - Blanco
+    {255, 255, 0,   240}, // AM[0] - Amarillo
+    {0,   150, 60,  240}, // V[1] - Verde
+    {255,   0,  0,  240}, // R[2] - Rojo
+    {0,   0,  255,  240}, // AZ[3] - Azul
+    {128,   0,  255,  240}, // VI[4] - Violeta
+    {255,   192,  203,  240}, // RO[5] - Rosa
+    {255,   165,  0,  240}, // NA[6] - Naranja
+    {178, 255, 255, 240}, // CE[7] - Celeste
+    {255, 255, 255, 240}, // BL[8] - Blanco
     {0,   0,  0,  0} // T[9] - Transparente
 };
 
-void dibujar(tJuego* juego)
+void dibujar(tJuego* juego, int** mat)
 {
-    int **mat = crearMatriz(MAT_FILA, MAT_COL, sizeof(int));
-    if(!mat)
-        return;
-
     int i;
     int j;
 
@@ -73,46 +69,29 @@ void dibujar(tJuego* juego)
             }
         }
     }
-
-    free(mat); //hacer destruirMatriz
 }
 
-void IluminarBoton(int boton, tJuego* juego)
+void iluminarBoton(int boton, tJuego* juego, int** mat)
 {
-    double ang_boton = (2 * M_PI)/juego->botones;
-    double cx = ((MAT_COL-1)/2);
-    double cy = ((MAT_FILA-1)/2);
     int i, j;
-    double dx, dy, ang;
-
-    int **mat = crearMatriz(MAT_FILA, MAT_COL, sizeof(int));
-    if(!mat)
-        return;
 
     for(i=0;i<MAT_FILA;i++)
     {
         for(j=0;j<MAT_COL;j++)
         {
-            dx = j - cx;
-            dy = i - cy;
-
-            ang = atan2(dy, dx);
-            if(ang < 0)
-                ang += (2 * M_PI); //una vuelta mas para que quede positivo
-
-            mat[i][j] = (int)(ang / ang_boton);
-            if(mat[i][j] == boton)
+            if(mat[i][j] == boton - 1)
                 {
-                    SDL_SetRenderDrawColor(juego->render, 255, 255, 255, 5);
+                    SDL_SetRenderDrawColor(juego->render, 255, 255, 255, 150);
                     SDL_Rect pixel = {TAM_PIXEL*j, TAM_PIXEL*i, TAM_PIXEL, TAM_PIXEL};
                     SDL_RenderFillRect(juego->render, &pixel);
                 }
         }
     }
 
-
-
+    SDL_RenderPresent(juego->render);
+    SDL_Delay(100);
 }
+
 void dibujarBordes(tJuego* juego)
 {
     double ang_boton = (2 * M_PI)/juego->botones;

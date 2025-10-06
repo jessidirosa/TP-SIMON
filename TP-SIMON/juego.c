@@ -5,42 +5,82 @@
 
 
 
-void inicializarPartida(tPartida* juego)
+void inicializarPartida(tPartida* partida)
 {
     //el nombre del jugador ya llega en la struct
-    juego->psec = juego->sec;
-    juego->ranking->score = 0;
-    juego->estado = CONTINUA;
-    juego->tiempoNota = TIEMPO_INICIAL; //puede que ya llegue a la funcion con esto ya asignado porque se cambia en la configuracion
-    juego->acoteDuracion = TIEMPO_ACOTADO_POR_NOTA;
+
+    partida->sec = malloc(sizeof(int) * MAX);
+    if(!partida->sec)
+        return;
+
+    partida->psec = partida->sec;
+    partida->ranking->score = 0;
+    partida->estado = CONTINUA;
+    partida->tiempoNota = TIEMPO_INICIAL; //puede que ya llegue a la funcion con esto ya asignado porque se cambia en la configuracion
+    partida->acoteDuracion = TIEMPO_ACOTADO_POR_NOTA;
+
+    crearSecuenciaAleatoria(partida); //despues va a diferir dependiendo los modos de juego elegidos en el menu
 }
 //
-//void iniciarJuego(tPartida* juego) //comienza la partida
+//void iniciarJuego(tPartida* partida, tJuego* juego, int** mat) //comienza la partida
 //{
-//    while(!finalizarJuego(juego)) //devolvera 1 cuando se presione "Salir" u otra cosa
+//    while(!finalizarJuego(partida)) //devolvera 1 cuando se presione "Salir" u otra cosa
 //    {
-//        inicializarPartida(juego);
+//        inicializarPartida(partida);
 //
-//        while(juego->estado != GAMEOVER)
+//        while(partida->estado != GAMEOVER)
 //        {
 //            //ver circularidad de secuencia para que sea continua hasta que el jugador pierda (resize de vector)
-//            secuencia(juego); //mostrara la secuencia desde sec a psec a medida que avanza. el vector sec ya tendra en numeros la secuencia con el modo y los tonos definidos previamente en config
+//            secuenciaJuego(partida, juego, mat); //mostrara la secuencia desde sec a psec a medida que avanza. el vector sec ya tendra en numeros la secuencia con el modo y los tonos definidos previamente en config
 //
-//            if(respuesta(juego) == ERROR) //registrara la respuesta del jugador y la ira guardando en res hasta detectar un error en el patron
-//                juego->estado = GAMEOVER;
+//            if(respuesta(partida, juego) == ERROR) //registrara la respuesta del jugador y la ira guardando en res hasta detectar un error en el patron
+//                partida->estado = GAMEOVER;
 //
 //            else
 //            {
-//                juego->ranking->score++;
-//                juego->psec++;
-//                disminuirTiempo(juego);
+//                partida->ranking->score++;
+//                partida->psec++;
+//                disminuirTiempo(partida);
 //            }
 //        }
 //    }
 //}
 
+//int respuesta(tPartida* partida)
+//{
+//    partida->sec; //aca esta la sec
+//
+//
+//}
+
+void secuenciaJuego(tPartida* partida, tJuego* juego, int** mat)
+{
+    int* p = partida->sec;
+
+    while(p < partida->psec)
+    {
+        iluminarBoton((*p), juego, mat);
+        p++;
+    }
+
+    partida->psec++;
+}
+
+void crearSecuenciaAleatoria(tPartida* partida)
+{
+    int* fin = partida->sec + MAX; //despues resize
+    int* p = partida->sec;
+
+    srand(time(NULL));
+    while(p < fin)
+    {
+        (*p) = rand() % (MAX_BOTON + 1);
+        p++;
+    }
+}
+
 //hacer funcion de crearArchivoRanking y ordenarArchivo
-bool insertarArchivoRankingSinDup(tPartida* juego)
+bool insertarArchivoRankingSinDup(tPartida* partida)
 {
     FILE* pf = fopen("Rankings.bin", "r+b");
     tRanking rankArch;
@@ -49,13 +89,13 @@ bool insertarArchivoRankingSinDup(tPartida* juego)
         return false; //no se pudo abrir
 
     fread(&rankArch, sizeof(tRanking), 1, pf);
-    while(!feof(pf) && strcmp(juego->ranking->jugador,rankArch.jugador))
+    while(!feof(pf) && strcmp(partida->ranking->jugador,rankArch.jugador))
         fread(&rankArch, sizeof(tRanking), 1, pf);
 
-    if(!strcmp(juego->ranking->jugador,rankArch.jugador))
+    if(!strcmp(partida->ranking->jugador,rankArch.jugador))
         fseek(pf, -1L, SEEK_CUR);
 
-    fwrite(juego->ranking, sizeof(tRanking), 1, pf);
+    fwrite(partida->ranking, sizeof(tRanking), 1, pf);
     fclose(pf);
 
     return true; //todo ok
@@ -113,3 +153,4 @@ bool esMenor(double actual, double nuevo)
 {
     return (nuevo - actual) > 0 ? false : true;
 }
+

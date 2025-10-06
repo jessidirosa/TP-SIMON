@@ -10,6 +10,11 @@ int main(int argc, char* argv[])
     bool corriendo = true;
     Mix_Chunk* sonido;
     Mix_Chunk* tono;
+    tPartida partida;
+
+    int **mat = crearMatriz(MAT_FILA, MAT_COL, sizeof(int));
+    if(!mat)
+        return ERROR;
 
     if(!sdl_inicializar(&juego))
     {
@@ -24,8 +29,28 @@ int main(int argc, char* argv[])
     sonido = cargarSonido("sonidos/sonido.wav");
     tono = crearTono(440.0f);
 
+        ///esto va despues dentro de iniciarJuego
+    inicializarPartida(&partida);
+
     while(corriendo)
     {
+
+        //limpia el lienzo
+        SDL_RenderClear(juego.render);
+
+        //pega fondo en el render
+        SDL_RenderCopy(juego.render, juego.fondo, NULL, NULL);
+        ///esto entra del menu
+        juego.botones = 8;
+        dibujar(&juego, mat);
+        dibujarBordes(&juego);
+        //presenta lo hecho en el render
+        SDL_RenderPresent(juego.render);
+        SDL_Delay(16);
+
+        ///esto va despues dentro de iniciarJuego
+        secuenciaJuego(&partida, &juego, mat);
+
         //precisamos captar cada evento
         //para decidir que hacer con el
         while(SDL_PollEvent(&evento)) //se usa para sacar todos los eventos que van ocurriendo y ver que hacemos uno por uno
@@ -49,32 +74,26 @@ int main(int argc, char* argv[])
                 }
 
             case SDL_MOUSEBUTTONDOWN://guardamos coordenadas de a donde toco para iluminar boton y ver si esta bien o no
+                //toca Play (x,y)
+
                 juego.mx = evento.button.x;
                 juego.my = evento.button.y;
                 printf("Click detectado en: %d %d\n", juego.mx, juego.my);
 
                 if(botonSeleccionar(&juego) > 0)
-                    IluminarBoton(botonSeleccionar(&juego), &juego);
+                {
+                    iluminarBoton(botonSeleccionar(&juego), &juego, mat);
+
+                }
 
                 printf("Boton seleccionado: %d\n\n", botonSeleccionar(&juego));
                 break;
             }
         }
-
-        //limpia el lienzo
-        SDL_RenderClear(juego.render);
-
-        //pega fondo en el render
-        SDL_RenderCopy(juego.render, juego.fondo, NULL, NULL);
-        juego.botones = 6;
-        dibujar(&juego);
-        dibujarBordes(&juego);
-        //presenta lo hecho en el render
-        SDL_RenderPresent(juego.render);
-        SDL_Delay(16);
     }
 
     sdl_limpiar(&juego);
+    free(mat); //destruirla bien
 
     return 0;
 }
