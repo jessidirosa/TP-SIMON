@@ -3,7 +3,11 @@
 #include "sonidos.h"
 #include "dibujos.h"
 
-
+bool puntoDentroCirculo(int x, int y, int cx, int cy, int r)
+{
+    int dx = x - cx, dy = y - cy;
+    return dx*dx + dy*dy <= r*r;
+}
 
 void inicializarPartida(tPartida* partida)
 {
@@ -13,7 +17,7 @@ void inicializarPartida(tPartida* partida)
     if(!partida->sec)
         return;
 
-    partida->psec = partida->sec;
+    partida->psec = partida->sec + 1;
     partida->ranking->score = 0;
     partida->estado = CONTINUA;
     partida->tiempoNota = TIEMPO_INICIAL; //puede que ya llegue a la funcion con esto ya asignado porque se cambia en la configuracion
@@ -21,37 +25,66 @@ void inicializarPartida(tPartida* partida)
 
     crearSecuenciaAleatoria(partida); //despues va a diferir dependiendo los modos de juego elegidos en el menu
 }
-//
-//void iniciarJuego(tPartida* partida, tJuego* juego, int** mat) //comienza la partida
-//{
-//    while(!finalizarJuego(partida)) //devolvera 1 cuando se presione "Salir" u otra cosa
-//    {
-//        inicializarPartida(partida);
-//
-//        while(partida->estado != GAMEOVER)
-//        {
-//            //ver circularidad de secuencia para que sea continua hasta que el jugador pierda (resize de vector)
-//            secuenciaJuego(partida, juego, mat); //mostrara la secuencia desde sec a psec a medida que avanza. el vector sec ya tendra en numeros la secuencia con el modo y los tonos definidos previamente en config
-//
-//            if(respuesta(partida, juego) == ERROR) //registrara la respuesta del jugador y la ira guardando en res hasta detectar un error en el patron
-//                partida->estado = GAMEOVER;
-//
-//            else
-//            {
-//                partida->ranking->score++;
-//                partida->psec++;
-//                disminuirTiempo(partida);
-//            }
-//        }
-//    }
-//}
 
-//int respuesta(tPartida* partida)
-//{
-//    partida->sec; //aca esta la sec
-//
-//
-//}
+
+void iniciarJuego(tPartida* partida, tJuego* juego, int** mat) //comienza la partida
+{
+    while(finalizarJuego(partida)) //devolvera 0 cuando se presione "Salir" u otra cosa
+    {
+        inicializarPartida(partida);
+
+        while(partida->estado != GAMEOVER)
+        {
+            //ver circularidad de secuencia para que sea continua hasta que el jugador pierda (resize de vector)
+            secuenciaJuego(partida, juego, mat); //mostrara la secuencia desde sec a psec a medida que avanza. el vector sec ya tendra en numeros la secuencia con el modo y los tonos definidos previamente en config
+            SDL_Delay(100);
+
+            if(respuesta(partida, juego, mat) == ERROR) //registrara la respuesta del jugador y la ira guardando en res hasta detectar un error en el patron
+                partida->estado = GAMEOVER;
+
+            else
+            {
+                partida->ranking->score++;
+                partida->psec++;
+                //disminuirTiempo(partida);
+            }
+        }
+    }
+}
+
+int respuesta(tPartida* partida, tJuego* juego, int** mat)
+{
+    int *p = partida->sec; //aca esta la sec
+    SDL_Event evento;
+
+    SDL_PollEvent(&evento);
+    if(evento.type == SDL_MOUSEBUTTONDOWN)//guardamos coordenadas de a donde toco para iluminar boton y ver si esta bien o no
+    {
+        juego->mx = evento.button.x;
+        juego->my = evento.button.y;
+    }
+
+    while(botonSeleccionar(juego) == (*p) && p < partida->psec)
+    {
+        SDL_PollEvent(&evento);
+        if(evento.type == SDL_MOUSEBUTTONDOWN)//guardamos coordenadas de a donde toco para iluminar boton y ver si esta bien o no
+        {
+            juego->mx = evento.button.x;
+            juego->my = evento.button.y;
+
+            if(botonSeleccionar(juego) > 0)
+                iluminarBoton(botonSeleccionar(juego), juego, mat);
+        }
+
+        p++;
+    }
+
+    if(botonSeleccionar(juego) != (*p))
+        return ERROR;
+    else
+        return CONTINUA;
+
+}
 
 void secuenciaJuego(tPartida* partida, tJuego* juego, int** mat)
 {
@@ -146,7 +179,7 @@ int botonSeleccionar(tJuego* juego)
         boton++;
     }
 
-    return menor->num + 1;
+    return menor->num;
 }
 
 bool esMenor(double actual, double nuevo)
@@ -154,3 +187,27 @@ bool esMenor(double actual, double nuevo)
     return (nuevo - actual) > 0 ? false : true;
 }
 
+void liberarMemoria(tJuego* juego, int** mat, tPartida* partida)
+{
+    int i;
+
+    free(partida->sec);
+    for(i=MAT_FILA-1; i>=0; i--)
+    {
+        free((*mat));
+        (*mat)++;
+    }
+
+    free(mat);
+}
+
+int finalizarJuego(tPartida* partida)
+{
+    SDL_Event evento;
+    SDL_PollEvent(&evento);
+
+    if(evento.type == SDL_MOUSEBUTTONDOWN &&  puntoDentroCirculo(evento.button.x, evento.button.y, CENTRO_PLAY_X, CENTRO_PLAY_Y, R_INT)) //Cambiar las macros por coord de boton QUIT
+        return GAMEOVER;
+    else
+        return CONTINUA;
+}

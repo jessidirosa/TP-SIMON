@@ -29,8 +29,6 @@ int main(int argc, char* argv[])
     sonido = cargarSonido("sonidos/sonido.wav");
     tono = crearTono(440.0f);
 
-        ///esto va despues dentro de iniciarJuego
-    inicializarPartida(&partida);
 
     while(corriendo)
     {
@@ -47,9 +45,6 @@ int main(int argc, char* argv[])
         //presenta lo hecho en el render
         SDL_RenderPresent(juego.render);
         SDL_Delay(16);
-
-        ///esto va despues dentro de iniciarJuego
-        secuenciaJuego(&partida, &juego, mat);
 
         //precisamos captar cada evento
         //para decidir que hacer con el
@@ -74,17 +69,17 @@ int main(int argc, char* argv[])
                 }
 
             case SDL_MOUSEBUTTONDOWN://guardamos coordenadas de a donde toco para iluminar boton y ver si esta bien o no
-                //toca Play (x,y)
+//                //toca Play (x,y)
+                if(puntoDentroCirculo(evento.button.x, evento.button.y, CENTRO_PLAY_X, CENTRO_PLAY_Y, R_INT))
+                    iniciarJuego(&partida, &juego, mat);
 
+                ///todo esto en funcion respuesta:
                 juego.mx = evento.button.x;
                 juego.my = evento.button.y;
                 printf("Click detectado en: %d %d\n", juego.mx, juego.my);
 
-                if(botonSeleccionar(&juego) > 0)
-                {
+                if(botonSeleccionar(&juego) >= 0)
                     iluminarBoton(botonSeleccionar(&juego), &juego, mat);
-
-                }
 
                 printf("Boton seleccionado: %d\n\n", botonSeleccionar(&juego));
                 break;
@@ -93,7 +88,7 @@ int main(int argc, char* argv[])
     }
 
     sdl_limpiar(&juego);
-    free(mat); //destruirla bien
+    liberarMemoria(&juego, mat, &partida);
 
     return 0;
 }

@@ -16,6 +16,8 @@
 #define TIEMPO_INICIAL 2000
 #define TIEMPO_ACOTADO_POR_NOTA 0.03
 #define MAX_BOTON 8
+#define CENTRO_PLAY_X 99
+#define CENTRO_PLAY_Y 99
 
 typedef struct
 {
@@ -27,7 +29,6 @@ typedef struct
 {
     int* sec;
     int* psec;
-    int res[MAX];
     tRanking* ranking;
     bool estado;
     float tiempoNota;
@@ -47,12 +48,17 @@ typedef struct
 } tBoton;
 
 void inicializarPartida(tPartida* juego);
-void iniciarJuego(tPartida* juego);
+void iniciarJuego(tPartida* partida, tJuego* juego, int** mat);
 bool insertarArchivoRankingSinDup(tPartida* juego);
 int botonSeleccionar(tJuego* juego);
 bool esMenor(double actual, double nuevo);
 void crearSecuenciaAleatoria(tPartida* partida);
 void secuenciaJuego(tPartida* partida, tJuego* juego, int** mat);
+int respuesta(tPartida* partida, tJuego* juego, int** mat);
+bool puntoDentroCirculo(int x, int y, int cx, int cy, int r);
+int finalizarJuego(tPartida* partida);
+void liberarMemoria(tJuego* juego, int** mat, tPartida* partida);
+
 
 
 #endif // JUEGO_H_INCLUDED

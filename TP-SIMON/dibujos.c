@@ -79,7 +79,7 @@ void iluminarBoton(int boton, tJuego* juego, int** mat)
     {
         for(j=0;j<MAT_COL;j++)
         {
-            if(mat[i][j] == boton - 1)
+            if(mat[i][j] == boton)
                 {
                     SDL_SetRenderDrawColor(juego->render, 255, 255, 255, 150);
                     SDL_Rect pixel = {TAM_PIXEL*j, TAM_PIXEL*i, TAM_PIXEL, TAM_PIXEL};
