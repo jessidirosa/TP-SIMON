@@ -38,6 +38,7 @@ void iniciarJuego(tPartida* partida, tJuego* juego, int** mat) //comienza la par
             //ver circularidad de secuencia para que sea continua hasta que el jugador pierda (resize de vector)
             secuenciaJuego(partida, juego, mat); //mostrara la secuencia desde sec a psec a medida que avanza. el vector sec ya tendra en numeros la secuencia con el modo y los tonos definidos previamente en config
             SDL_Delay(100);
+            apagarBoton((*partida->sec), juego, mat);
 
             if(respuesta(partida, juego, mat) == ERROR) //registrara la respuesta del jugador y la ira guardando en res hasta detectar un error en el patron
                 partida->estado = GAMEOVER;
@@ -51,39 +52,86 @@ void iniciarJuego(tPartida* partida, tJuego* juego, int** mat) //comienza la par
         }
     }
 }
+//jessi:
+//int respuesta(tPartida* partida, tJuego* juego, int** mat)
+//{
+//    int *p = partida->sec; //aca esta la sec
+//    SDL_Event evento;
+//
+//    SDL_PollEvent(&evento);
+//    if(evento.type == SDL_MOUSEBUTTONDOWN)//guardamos coordenadas de a donde toco para iluminar boton y ver si esta bien o no
+//    {
+//        juego->mx = evento.button.x;
+//        juego->my = evento.button.y;
+//    }
+//
+//    while(botonSeleccionar(juego) == (*p) && p < partida->psec)
+//    {
+//        SDL_PollEvent(&evento);
+//        if(evento.type == SDL_MOUSEBUTTONDOWN)//guardamos coordenadas de a donde toco para iluminar boton y ver si esta bien o no
+//        {
+//            juego->mx = evento.button.x;
+//            juego->my = evento.button.y;
+//
+//            if(botonSeleccionar(juego) > 0)
+//                iluminarBoton(botonSeleccionar(juego), juego, mat);
+//        }
+//
+//        p++;
+//    }
+//
+//    if(botonSeleccionar(juego) != (*p))
+//        return ERROR;
+//    else
+//        return CONTINUA;
+//}
 
+//santi:
 int respuesta(tPartida* partida, tJuego* juego, int** mat)
 {
-    int *p = partida->sec; //aca esta la sec
     SDL_Event evento;
+    int *p = partida->sec;
 
-    SDL_PollEvent(&evento);
-    if(evento.type == SDL_MOUSEBUTTONDOWN)//guardamos coordenadas de a donde toco para iluminar boton y ver si esta bien o no
+    while (p < partida->psec)
     {
-        juego->mx = evento.button.x;
-        juego->my = evento.button.y;
-    }
-
-    while(botonSeleccionar(juego) == (*p) && p < partida->psec)
-    {
-        SDL_PollEvent(&evento);
-        if(evento.type == SDL_MOUSEBUTTONDOWN)//guardamos coordenadas de a donde toco para iluminar boton y ver si esta bien o no
+        while (SDL_WaitEvent(&evento))
         {
-            juego->mx = evento.button.x;
-            juego->my = evento.button.y;
+            if (evento.type == SDL_MOUSEBUTTONDOWN)
+            {
+                juego->mx = evento.button.x;
+                juego->my = evento.button.y;
 
-            if(botonSeleccionar(juego) > 0)
-                iluminarBoton(botonSeleccionar(juego), juego, mat);
+                int boton = botonSeleccionar(juego);
+                printf("Clic en (%d,%d)\nBoton detectado: %d\n", evento.button.x, evento.button.y, boton);
+
+                if (boton > 0)
+                {
+                    // Ilumina el botón clickeado
+                    iluminarBoton(botonSeleccionar(juego), juego, mat);
+                    SDL_RenderPresent(juego->render);
+                    SDL_Delay(100);
+                    apagarBoton((*partida->sec), juego, mat);
+
+                    // Redibuja la vista normal después
+                    dibujarBordes(juego);
+                    SDL_RenderPresent(juego->render);
+
+                    if (boton != *p)
+                    {
+                        printf("Error! Esperaba %d pero se toco %d\n", *p, boton);
+                        return ERROR;
+                    }
+
+                    p++;
+                    break;
+                }
+            }
+            else if (evento.type == SDL_QUIT)
+                return ERROR;
         }
-
-        p++;
     }
 
-    if(botonSeleccionar(juego) != (*p))
-        return ERROR;
-    else
-        return CONTINUA;
-
+    return CONTINUA;
 }
 
 void secuenciaJuego(tPartida* partida, tJuego* juego, int** mat)

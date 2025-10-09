@@ -25,5 +25,6 @@ void dibujar(tJuego* juego, int** mat);
 int** crearMatriz(int cf, int cc, size_t tam);
 void dibujarBordes(tJuego* juego);
 void iluminarBoton(int boton, tJuego* juego, int** mat);
+void apagarBoton(int boton, tJuego* juego, int** mat);
 
 #endif // DIBUJOS_H_INCLUDED

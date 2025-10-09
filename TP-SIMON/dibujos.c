@@ -92,6 +92,32 @@ void iluminarBoton(int boton, tJuego* juego, int** mat)
     SDL_Delay(100);
 }
 
+void apagarBoton(int boton, tJuego* juego, int** mat)
+{
+    int i, j;
+
+    SDL_Color color = colores[boton]; // Tomamos el color original del botón
+
+    // Asegurar opacidad total (si querés evitar efectos raros)
+    SDL_SetRenderDrawBlendMode(juego->render, SDL_BLENDMODE_NONE);
+
+    for(i = 0; i < MAT_FILA; i++)
+    {
+        for(j = 0; j < MAT_COL; j++)
+        {
+            if(mat[i][j] == boton)
+            {
+                SDL_SetRenderDrawColor(juego->render, color.r, color.g, color.b, 255); // Forzamos alfa 255
+                SDL_Rect pixel = {TAM_PIXEL * j, TAM_PIXEL * i, TAM_PIXEL, TAM_PIXEL};
+                SDL_RenderFillRect(juego->render, &pixel);
+            }
+        }
+    }
+
+    SDL_RenderPresent(juego->render);
+    SDL_Delay(100);
+}
+
 void dibujarBordes(tJuego* juego)
 {
     double ang_boton = (2 * M_PI)/juego->botones;
