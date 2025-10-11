@@ -8,12 +8,16 @@ int main(int argc, char* argv[])
     tJuego juego;
     SDL_Event evento;
     bool corriendo = true;
-    Mix_Chunk* sonido;
-    Mix_Chunk* tono;
+//    Mix_Chunk* sonido;
+
     tPartida partida;
 
     int **mat = crearMatriz(MAT_FILA, MAT_COL, sizeof(int));
     if(!mat)
+        return ERROR;
+
+    juego.tonosBotones = malloc(sizeof(int) * MAX_BOTON);
+    if(!juego.tonosBotones)
         return ERROR;
 
     if(!sdl_inicializar(&juego))
@@ -26,9 +30,7 @@ int main(int argc, char* argv[])
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
         printf("[ERROR] No se pudo inicializar el audio: %s\n", Mix_GetError());
 
-    sonido = cargarSonido("sonidos/sonido.wav");
-    tono = crearTono(440.0f);
-
+//    sonido = cargarSonido("sonidos/sonido.wav");
 
     while(corriendo)
     {
@@ -39,7 +41,7 @@ int main(int argc, char* argv[])
         //pega fondo en el render
         SDL_RenderCopy(juego.render, juego.fondo, NULL, NULL);
         ///esto entra del menu
-        juego.botones = 8;
+        juego.botones = 7;
         dibujar(&juego, mat);
         dibujarBordes(&juego);
         //presenta lo hecho en el render
@@ -73,15 +75,6 @@ int main(int argc, char* argv[])
                 if(puntoDentroCirculo(evento.button.x, evento.button.y, CENTRO_PLAY_X, CENTRO_PLAY_Y, R_INT))
                     iniciarJuego(&partida, &juego, mat);
 
-//                ///todo esto en funcion respuesta:
-//                juego.mx = evento.button.x;
-//                juego.my = evento.button.y;
-//                printf("Click detectado en: %d %d\n", juego.mx, juego.my);
-//
-//                if(botonSeleccionar(&juego) >= 0)
-//                    iluminarBoton(botonSeleccionar(&juego), &juego, mat);
-
-//                printf("Boton seleccionado: %d\n\n", botonSeleccionar(&juego));
                 break;
             }
         }

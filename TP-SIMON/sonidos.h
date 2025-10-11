@@ -9,5 +9,7 @@
 Mix_Chunk* cargarSonido(const char *ruta);
 Mix_Chunk* crearTono(float frecuencia);
 void destruirTono(Mix_Chunk *tono);
+void asignarSonidos(tJuego* juego);
+void reproducirNota(int boton, tJuego* juego);
 
 #endif // SONIDOS_H_INCLUDED

@@ -4,18 +4,18 @@
 #include "sonidos.h"
 
 ///del ejemplo de proyecto que nos dieron
-Mix_Chunk* cargarSonido(const char *ruta)
-{
-    Mix_Chunk *sonido;
-
-    sonido = Mix_LoadWAV(ruta);
-    if (!sonido)
-    {
-        printf("Error cargando sonido \"%s:\" %s\n", ruta, Mix_GetError());
-    }
-
-    return sonido;
-}
+//Mix_Chunk* cargarSonido(const char *ruta)
+//{
+//    Mix_Chunk *sonido;
+//
+//    sonido = Mix_LoadWAV(ruta);
+//    if (!sonido)
+//    {
+//        printf("Error cargando sonido \"%s:\" %s\n", ruta, Mix_GetError());
+//    }
+//
+//    return sonido;
+//}
 
 Mix_Chunk* crearTono(float frecuencia)
 {
@@ -55,3 +55,38 @@ void destruirTono(Mix_Chunk *tono)
 }
 
 ///hasta aca
+
+
+void reproducirNota(int boton, tJuego* juego) //faltaria agregar cuando se equivoca un sonido diferente
+{
+    int* pn = juego->tonosBotones;
+    Mix_Chunk* tono;
+
+    pn += boton; //vamos al boton corresp
+    tono = crearTono((*pn));
+    Mix_PlayChannel(-1, tono, 0);
+
+}
+
+void asignarSonidos(tJuego* juego) //carga el vector de tonos de juego->tonosBotones con las frec correspondientes (cargadas en matriz) dependiendo la cant de botones
+{
+    int j, i = 0;
+    float matTonos[][MAX_BOTON + 1] =  { {3, 261.63, 329.63, 392.00,  0,      0,      0,      0,      0},
+                                         {4, 261.63, 329.63, 392.00,  440.00, 0,      0,      0,      0},
+                                         {5, 261.63, 293.66, 329.63,  392.00, 440.00, 0,      0,      0},
+                                         {6, 261.63, 293.66, 329.63,  369.99, 415.30, 466.16, 0,      0},
+                                         {7, 261.63, 293.66, 311.13,  349.23, 392.00, 415.30, 493.88, 0},
+                                         {8, 261.63, 293.66, 329.63,  349.23, 392.00, 440.00, 493.88, 523.25}};
+
+
+    int* pTonos = juego->tonosBotones;
+
+    while(matTonos[i][0] != juego->botones)
+        i++;
+
+    for(j=1; j<(MAX_BOTON + 1); j++)
+    {
+        *pTonos = matTonos[i][j];
+        pTonos++;
+    }
+}

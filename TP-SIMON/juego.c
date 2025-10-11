@@ -9,7 +9,7 @@ bool puntoDentroCirculo(int x, int y, int cx, int cy, int r)
     return dx*dx + dy*dy <= r*r;
 }
 
-void inicializarPartida(tPartida* partida)
+void inicializarPartida(tPartida* partida, tJuego* juego)
 {
     //el nombre del jugador ya llega en la struct
 
@@ -22,8 +22,9 @@ void inicializarPartida(tPartida* partida)
     partida->estado = CONTINUA;
     partida->tiempoNota = TIEMPO_INICIAL; //puede que ya llegue a la funcion con esto ya asignado porque se cambia en la configuracion
     partida->acoteDuracion = TIEMPO_ACOTADO_POR_NOTA;
+    asignarSonidos(juego);
 
-    crearSecuenciaAleatoria(partida); //despues va a diferir dependiendo los modos de juego elegidos en el menu
+    crearSecuenciaAleatoria(partida, juego); //despues va a diferir dependiendo los modos de juego elegidos en el menu
 }
 
 float duracionNota(tPartida* partida)
@@ -33,7 +34,7 @@ float duracionNota(tPartida* partida)
 
 void iniciarJuego(tPartida* partida, tJuego* juego, int** mat) //comienza la partida
 {
-    inicializarPartida(partida);
+    inicializarPartida(partida, juego);
 
     while(partida->estado != GAMEOVER && finalizarJuego(partida))
     {
@@ -76,10 +77,6 @@ int respuesta(tPartida* partida, tJuego* juego, int** mat)
                 SDL_Delay(partida->tiempoNota);
                 apagarBoton(boton, juego, mat);
 
-                // Redibuja la vista normal después
-                dibujarBordes(juego);
-                SDL_RenderPresent(juego->render);
-
                 if (boton != *p)
                 {
                     printf("Error! Esperaba %d pero se toco %d\n", *p, boton);
@@ -110,7 +107,7 @@ void secuenciaJuego(tPartida* partida, tJuego* juego, int** mat)
     }
 }
 
-void crearSecuenciaAleatoria(tPartida* partida)
+void crearSecuenciaAleatoria(tPartida* partida, tJuego* juego) //modo schonberg
 {
     int* fin = partida->sec + MAX; //despues resize
     int* p = partida->sec;
@@ -118,7 +115,7 @@ void crearSecuenciaAleatoria(tPartida* partida)
     srand(time(NULL));
     while(p < fin)
     {
-        (*p) = rand() % (MAX_BOTON + 1);
+        (*p) = rand() % juego->botones;
         p++;
     }
 }
@@ -210,6 +207,7 @@ void liberarMemoria(tJuego* juego, int** mat, tPartida* partida)
     }
 
     free(mat);
+    free(juego->tonosBotones);
 }
 
 int finalizarJuego(tPartida* partida)

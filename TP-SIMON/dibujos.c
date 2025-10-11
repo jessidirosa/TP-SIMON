@@ -88,6 +88,7 @@ void iluminarBoton(int boton, tJuego* juego, int** mat)
         }
     }
 
+    reproducirNota(boton, juego);
     SDL_RenderPresent(juego->render);
     SDL_Delay(100);
 }
@@ -110,12 +111,11 @@ void apagarBoton(int boton, tJuego* juego, int** mat)
             }
         }
     }
-
+    dibujarBordes(juego);
     SDL_RenderPresent(juego->render);
-    SDL_Delay(100);
 }
 
-void dibujarBordes(tJuego* juego)
+void dibujarBordes(tJuego* juego) //ver cuando se tienen que redibujar que pasa (esta raro)
 {
     double ang_boton = (2 * M_PI)/juego->botones;
     double x1, x2, y1, y2, ang;

@@ -20,6 +20,7 @@ typedef struct
     SDL_Surface* surface;
     SDL_Texture* fondo;
     unsigned botones; //3 a 8
+    int* tonosBotones;
     int mx; //coordenada x del mouse
     int my; //coordenada y del mouse
 

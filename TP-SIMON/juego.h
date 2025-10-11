@@ -14,7 +14,7 @@
 #define ERROR -1
 #define CONTINUA 1
 #define TIEMPO_INICIAL 1000
-#define TIEMPO_ACOTADO_POR_NOTA 0.03
+#define TIEMPO_ACOTADO_POR_NOTA 0.1
 #define MAX_BOTON 8
 #define CENTRO_PLAY_X 99
 #define CENTRO_PLAY_Y 99
@@ -38,27 +38,26 @@ typedef struct
 
 typedef struct
 {
-    int num; //1, 2, 3, 4, 5, 6, 7, 8
+    int num; //0, 1, 2, 3, 4, 5, 6, 7
     double x;
     double y;
     double distClick;
-    bool encendido;
-    int duracion_flash; //tiempo que dura encendido
     int sonido;
 } tBoton;
 
-void inicializarPartida(tPartida* juego);
+void inicializarPartida(tPartida* partida, tJuego* juego);
 void iniciarJuego(tPartida* partida, tJuego* juego, int** mat);
 bool insertarArchivoRankingSinDup(tPartida* juego);
 int botonSeleccionar(tJuego* juego);
 bool esMenor(double actual, double nuevo);
-void crearSecuenciaAleatoria(tPartida* partida);
+void crearSecuenciaAleatoria(tPartida* partida, tJuego* juego);
 void secuenciaJuego(tPartida* partida, tJuego* juego, int** mat);
 int respuesta(tPartida* partida, tJuego* juego, int** mat);
 bool puntoDentroCirculo(int x, int y, int cx, int cy, int r);
 int finalizarJuego(tPartida* partida);
 void liberarMemoria(tJuego* juego, int** mat, tPartida* partida);
 float duracionNota(tPartida* partida);
+
 
 
 
