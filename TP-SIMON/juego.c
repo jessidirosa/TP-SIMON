@@ -26,109 +26,71 @@ void inicializarPartida(tPartida* partida)
     crearSecuenciaAleatoria(partida); //despues va a diferir dependiendo los modos de juego elegidos en el menu
 }
 
+float duracionNota(tPartida* partida)
+{
+    return partida->tiempoNota * (1 - partida->acoteDuracion);
+}
 
 void iniciarJuego(tPartida* partida, tJuego* juego, int** mat) //comienza la partida
 {
-    while(finalizarJuego(partida)) //devolvera 0 cuando se presione "Salir" u otra cosa
+    inicializarPartida(partida);
+
+    while(partida->estado != GAMEOVER && finalizarJuego(partida))
     {
-        inicializarPartida(partida);
+        //ver circularidad de secuencia para que sea continua hasta que el jugador pierda (resize de vector)
+        secuenciaJuego(partida, juego, mat); //mostrara la secuencia desde sec a psec a medida que avanza. el vector sec ya tendra en numeros la secuencia con el modo y los tonos definidos previamente en config
 
-        while(partida->estado != GAMEOVER)
+        if(respuesta(partida, juego, mat) == ERROR) //registrara la respuesta del jugador y la ira guardando en res hasta detectar un error en el patron
+            partida->estado = GAMEOVER;
+
+        else
         {
-            //ver circularidad de secuencia para que sea continua hasta que el jugador pierda (resize de vector)
-            secuenciaJuego(partida, juego, mat); //mostrara la secuencia desde sec a psec a medida que avanza. el vector sec ya tendra en numeros la secuencia con el modo y los tonos definidos previamente en config
-            SDL_Delay(100);
-            apagarBoton((*partida->sec), juego, mat);
-
-            if(respuesta(partida, juego, mat) == ERROR) //registrara la respuesta del jugador y la ira guardando en res hasta detectar un error en el patron
-                partida->estado = GAMEOVER;
-
-            else
-            {
-                partida->ranking->score++;
-                partida->psec++;
-                //disminuirTiempo(partida);
-            }
+            partida->ranking->score++;
+            partida->psec++;
+            partida->tiempoNota = duracionNota(partida);
         }
     }
 }
-//jessi:
-//int respuesta(tPartida* partida, tJuego* juego, int** mat)
-//{
-//    int *p = partida->sec; //aca esta la sec
-//    SDL_Event evento;
-//
-//    SDL_PollEvent(&evento);
-//    if(evento.type == SDL_MOUSEBUTTONDOWN)//guardamos coordenadas de a donde toco para iluminar boton y ver si esta bien o no
-//    {
-//        juego->mx = evento.button.x;
-//        juego->my = evento.button.y;
-//    }
-//
-//    while(botonSeleccionar(juego) == (*p) && p < partida->psec)
-//    {
-//        SDL_PollEvent(&evento);
-//        if(evento.type == SDL_MOUSEBUTTONDOWN)//guardamos coordenadas de a donde toco para iluminar boton y ver si esta bien o no
-//        {
-//            juego->mx = evento.button.x;
-//            juego->my = evento.button.y;
-//
-//            if(botonSeleccionar(juego) > 0)
-//                iluminarBoton(botonSeleccionar(juego), juego, mat);
-//        }
-//
-//        p++;
-//    }
-//
-//    if(botonSeleccionar(juego) != (*p))
-//        return ERROR;
-//    else
-//        return CONTINUA;
-//}
 
-//santi:
 int respuesta(tPartida* partida, tJuego* juego, int** mat)
 {
+    int* p = partida->sec;
     SDL_Event evento;
-    int *p = partida->sec;
 
     while (p < partida->psec)
     {
-        while (SDL_WaitEvent(&evento))
+        SDL_WaitEvent(&evento);
+        if (evento.type == SDL_MOUSEBUTTONDOWN && puntoDentroCirculo(evento.button.x, evento.button.y, CENTRO_PLAY_X, CENTRO_PLAY_Y, R_EXT))
         {
-            if (evento.type == SDL_MOUSEBUTTONDOWN)
+            juego->mx = evento.button.x;
+            juego->my = evento.button.y;
+
+            int boton = botonSeleccionar(juego);
+            printf("Clic en (%d,%d)\nBoton detectado: %d\n", evento.button.x, evento.button.y, boton);
+
+            if (boton >= 0)
             {
-                juego->mx = evento.button.x;
-                juego->my = evento.button.y;
+                // Ilumina el botón clickeado
+                iluminarBoton(boton, juego, mat);
+                SDL_RenderPresent(juego->render);
+                SDL_Delay(partida->tiempoNota);
+                apagarBoton(boton, juego, mat);
 
-                int boton = botonSeleccionar(juego);
-                printf("Clic en (%d,%d)\nBoton detectado: %d\n", evento.button.x, evento.button.y, boton);
+                // Redibuja la vista normal después
+                dibujarBordes(juego);
+                SDL_RenderPresent(juego->render);
 
-                if (boton > 0)
+                if (boton != *p)
                 {
-                    // Ilumina el botón clickeado
-                    iluminarBoton(botonSeleccionar(juego), juego, mat);
-                    SDL_RenderPresent(juego->render);
-                    SDL_Delay(100);
-                    apagarBoton((*partida->sec), juego, mat);
-
-                    // Redibuja la vista normal después
-                    dibujarBordes(juego);
-                    SDL_RenderPresent(juego->render);
-
-                    if (boton != *p)
-                    {
-                        printf("Error! Esperaba %d pero se toco %d\n", *p, boton);
-                        return ERROR;
-                    }
-
-                    p++;
-                    break;
+                    printf("Error! Esperaba %d pero se toco %d\n", *p, boton);
+                    return ERROR;
                 }
+
+                p++;
             }
-            else if (evento.type == SDL_QUIT)
-                return ERROR;
         }
+        else if (evento.type == SDL_QUIT)
+            return ERROR;
     }
 
     return CONTINUA;
@@ -141,10 +103,11 @@ void secuenciaJuego(tPartida* partida, tJuego* juego, int** mat)
     while(p < partida->psec)
     {
         iluminarBoton((*p), juego, mat);
+        SDL_Delay(partida->tiempoNota);
+        apagarBoton((*p), juego, mat);
+
         p++;
     }
-
-    partida->psec++;
 }
 
 void crearSecuenciaAleatoria(tPartida* partida)

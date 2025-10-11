@@ -73,15 +73,15 @@ int main(int argc, char* argv[])
                 if(puntoDentroCirculo(evento.button.x, evento.button.y, CENTRO_PLAY_X, CENTRO_PLAY_Y, R_INT))
                     iniciarJuego(&partida, &juego, mat);
 
-                ///todo esto en funcion respuesta:
-                juego.mx = evento.button.x;
-                juego.my = evento.button.y;
-                printf("Click detectado en: %d %d\n", juego.mx, juego.my);
+//                ///todo esto en funcion respuesta:
+//                juego.mx = evento.button.x;
+//                juego.my = evento.button.y;
+//                printf("Click detectado en: %d %d\n", juego.mx, juego.my);
+//
+//                if(botonSeleccionar(&juego) >= 0)
+//                    iluminarBoton(botonSeleccionar(&juego), &juego, mat);
 
-                if(botonSeleccionar(&juego) >= 0)
-                    iluminarBoton(botonSeleccionar(&juego), &juego, mat);
-
-                printf("Boton seleccionado: %d\n\n", botonSeleccionar(&juego));
+//                printf("Boton seleccionado: %d\n\n", botonSeleccionar(&juego));
                 break;
             }
         }

@@ -13,7 +13,7 @@
 #define GAMEOVER 0
 #define ERROR -1
 #define CONTINUA 1
-#define TIEMPO_INICIAL 2000
+#define TIEMPO_INICIAL 1000
 #define TIEMPO_ACOTADO_POR_NOTA 0.03
 #define MAX_BOTON 8
 #define CENTRO_PLAY_X 99
@@ -58,6 +58,7 @@ int respuesta(tPartida* partida, tJuego* juego, int** mat);
 bool puntoDentroCirculo(int x, int y, int cx, int cy, int r);
 int finalizarJuego(tPartida* partida);
 void liberarMemoria(tJuego* juego, int** mat, tPartida* partida);
+float duracionNota(tPartida* partida);
 
 
 

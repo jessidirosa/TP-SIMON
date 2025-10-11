@@ -98,9 +98,6 @@ void apagarBoton(int boton, tJuego* juego, int** mat)
 
     SDL_Color color = colores[boton]; // Tomamos el color original del botón
 
-    // Asegurar opacidad total (si querés evitar efectos raros)
-    SDL_SetRenderDrawBlendMode(juego->render, SDL_BLENDMODE_NONE);
-
     for(i = 0; i < MAT_FILA; i++)
     {
         for(j = 0; j < MAT_COL; j++)
