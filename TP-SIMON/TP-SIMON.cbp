@@ -43,13 +43,17 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add directory="lib/SDL2_ttf-2.21.2-win32-x64/SDL2_ttf-2.21.2/x86_64-w64-mingw32/include/SDL2" />
 		</Compiler>
 		<Linker>
 			<Add option="-lmingw32" />
 			<Add option="-lSDL2main" />
 			<Add option="-lSDL2" />
 			<Add option="-lSDL2_mixer" />
+			<Add option="-lSDL2_ttf" />
 			<Add library="lib/SDL2_mixer-2.8.1/x86_64-w64-mingw32/lib/libSDL2_mixer.dll.a" />
+			<Add library="lib/SDL2_ttf-2.21.2-win32-x64/SDL2_ttf-2.21.2/x86_64-w64-mingw32/lib/libSDL2_ttf.dll.a" />
+			<Add directory="lib/SDL2_ttf-2.21.2-win32-x64/SDL2_ttf-2.21.2/x86_64-w64-mingw32/lib" />
 		</Linker>
 		<Unit filename="dibujos.c">
 			<Option compilerVar="CC" />
@@ -62,6 +66,10 @@
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="menus.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="menus.h" />
 		<Unit filename="sdl.c">
 			<Option compilerVar="CC" />
 		</Unit>

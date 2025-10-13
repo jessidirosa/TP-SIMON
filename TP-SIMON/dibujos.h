@@ -14,6 +14,7 @@
 #define CE 7
 #define BL 8
 #define T 9
+#define N 10
 
 #define MAT_COL 200
 #define MAT_FILA 200
@@ -26,5 +27,8 @@ int** crearMatriz(int cf, int cc, size_t tam);
 void dibujarBordes(tJuego* juego);
 void iluminarBoton(int boton, tJuego* juego, int** mat);
 void apagarBoton(int boton, tJuego* juego, int** mat);
+void dibujarMenu(tJuego* juego, tBotones* jugar, tBotones* config);
+void dibujarBotonCentro(tJuego* juego, tBotones* boton, char* nombre);
+void dibujarMenuPausa(tJuego* juego, tBotones* reanudar, tBotones* volverAInicio);
 
 #endif // DIBUJOS_H_INCLUDED

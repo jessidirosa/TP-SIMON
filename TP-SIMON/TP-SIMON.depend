@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1760201597 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\main.c
+1760312332 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\main.c
 	"dibujos.h"
 	"sdl.h"
 	"juego.h"
@@ -466,49 +466,71 @@
 1758753142 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\tp-simon.c
 	"tp-simon.h"
 
-1760198558 c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\sdl.h
+1760310190 c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\sdl.h
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
 	<SDL2/SDL.h>
 	<SDL2/SDL_mixer.h>
+	<SDL_ttf.h>
 
-1759441843 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\sdl.c
-	"dibujos.h"
+1760300554 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\sdl.c
 	"sdl.h"
 	"juego.h"
 	"sonidos.h"
+	"dibujos.h"
+	"menus.h"
 
-1760201462 c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\juego.h
+1760312604 c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\juego.h
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
 	<string.h>
 	<math.h>
 	<time.h>
+	"sdl.h"
 
-1760201670 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\juego.c
+1760312796 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\juego.c
 	"sdl.h"
 	"juego.h"
 	"sonidos.h"
 	"dibujos.h"
+	"menus.h"
 
-1760200701 c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\sonidos.h
-	<math.h>
-
-1760201597 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\sonidos.c
-	"dibujos.h"
-	"sdl.h"
-	"juego.h"
-	"sonidos.h"
-
-1760201670 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\dibujos.c
-	"dibujos.h"
-	"sdl.h"
-	"juego.h"
-	"sonidos.h"
-
-1760043172 c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\dibujos.h
+1760299484 c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\sonidos.h
 	<math.h>
 	"sdl.h"
+
+1760276210 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\sonidos.c
+	"sdl.h"
+	"juego.h"
+	"sonidos.h"
+	"dibujos.h"
+	"menus.h"
+
+1760312014 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\dibujos.c
+	"sdl.h"
+	"juego.h"
+	"sonidos.h"
+	"dibujos.h"
+	"menus.h"
+
+1760315394 c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\dibujos.h
+	<math.h>
+	"sdl.h"
+
+1760270964 c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\lib\sdl2_ttf-2.21.2-win32-x64\sdl2_ttf-2.21.2\x86_64-w64-mingw32\include\sdl2\sdl_ttf.h
+	"SDL.h"
+	"begin_code.h"
+	"close_code.h"
+
+1760308845 c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\menus.h
+	"sdl.h"
+
+1760314534 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\menus.c
+	"sdl.h"
+	"juego.h"
+	"sonidos.h"
+	"dibujos.h"
+	"menus.h"
 

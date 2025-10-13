@@ -1,7 +1,8 @@
-#include "dibujos.h"
 #include "sdl.h"
 #include "juego.h"
 #include "sonidos.h"
+#include "dibujos.h"
+#include "menus.h"
 
 SDL_Color colores[] =
 {
@@ -14,7 +15,8 @@ SDL_Color colores[] =
     {255,   165,  0,  240}, // NA[6] - Naranja
     {178, 255, 255, 240}, // CE[7] - Celeste
     {255, 255, 255, 240}, // BL[8] - Blanco
-    {0,   0,  0,  0} // T[9] - Transparente
+    {0,   0,  0,  0}, // T[9] - Transparente
+    {0, 0, 0, 255} // N[10] - Negro
 };
 
 void dibujar(tJuego* juego, int** mat)
@@ -30,6 +32,11 @@ void dibujar(tJuego* juego, int** mat)
     double dist;
     double ang;
     int sector;
+
+    SDL_RenderClear(juego->render);
+    //pega fondo en el render
+    SDL_RenderCopy(juego->render, juego->fondo, NULL, NULL);
+
 
     for(i=0;i<MAT_FILA;i++)
     {
@@ -169,3 +176,134 @@ int** crearMatriz(int cf, int cc, size_t tam)
     return mat;
 }
 
+//se podria hacer una funcion mas generica de los botones mandandoles las coord de donde se lo quiere
+void dibujarBotonCentro(tJuego* juego, tBotones* boton, char* nombre)
+{
+    SDL_Color colorTexto = {255, 255, 255, 240}; //blanco
+
+    boton->fuente = TTF_OpenFont("assets/porky_s/porkys_.ttf", 18);
+    if (!boton->fuente)
+        printf("OpenFont: %s\n", TTF_GetError());
+
+    boton->destino.x = 88;
+    boton->destino.y = 93;
+    boton->destino.w = 25;
+    boton->destino.h = 10;
+
+    boton->surface = TTF_RenderUTF8_Blended(boton->fuente, nombre, colorTexto);
+    boton->textura = SDL_CreateTextureFromSurface(juego->render, boton->surface);
+    SDL_FreeSurface(boton->surface);
+    SDL_RenderCopy(juego->render, boton->textura, NULL, &(boton->destino));
+    SDL_RenderPresent(juego->render);
+
+    SDL_DestroyTexture(boton->fuente);
+    TTF_CloseFont(boton->fuente);
+}
+
+void dibujarMenu(tJuego* juego, tBotones* jugar, tBotones* config)
+{
+    TTF_Font* titulo;
+    SDL_Texture* textTitulo;
+    SDL_Surface* surfTitulo;
+    SDL_Rect destTitulo;
+    SDL_Color colorTexto = {255, 255, 255, 240}; //blanco
+    int anchoTitulo, altoTitulo;
+
+    titulo = TTF_OpenFont("assets/aero_2/Aero.ttf", 24);
+    if (!titulo)
+        printf("OpenFont: %s\n", TTF_GetError());
+
+    TTF_SizeUTF8(titulo, "Simon Game", &anchoTitulo, &altoTitulo);
+
+    destTitulo.x = 25;
+    destTitulo.y = 50;
+    destTitulo.w = anchoTitulo;
+    destTitulo.h = altoTitulo;
+
+    surfTitulo = TTF_RenderUTF8_Blended(titulo, "Simon Game", colorTexto);
+    textTitulo = SDL_CreateTextureFromSurface(juego->render, surfTitulo);
+    SDL_FreeSurface(surfTitulo);
+
+    jugar->fuente = TTF_OpenFont("assets/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf", 16);
+    if (!jugar->fuente)
+        printf("OpenFont: %s\n", TTF_GetError());
+
+    TTF_SizeUTF8(jugar->fuente, "Jugar", &(jugar->destino.w), &(jugar->destino.h));
+
+    jugar->destino.x = 75;
+    jugar->destino.y = 100;
+
+    jugar->surface = TTF_RenderUTF8_Blended(jugar->fuente, "Jugar", colorTexto);
+    jugar->textura = SDL_CreateTextureFromSurface(juego->render, jugar->surface);
+    SDL_FreeSurface(jugar->surface);
+
+    config->fuente = TTF_OpenFont("assets/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf", 16);
+    if (!config->fuente)
+        printf("OpenFont: %s\n", TTF_GetError());
+
+    TTF_SizeUTF8(config->fuente, "Configuracion", &(config->destino.w), &(config->destino.h));
+
+    config->destino.x = 40;
+    config->destino.y = 130;
+
+    config->surface = TTF_RenderUTF8_Blended(config->fuente, "Configuracion", colorTexto);
+    config->textura = SDL_CreateTextureFromSurface(juego->render, config->surface);
+    SDL_FreeSurface(config->surface);
+
+    SDL_SetRenderDrawColor(juego->render, 205, 205, 205, 255);
+    SDL_RenderCopy(juego->render, textTitulo, NULL, &destTitulo);
+    SDL_RenderCopy(juego->render, jugar->textura, NULL, &(jugar->destino));
+    SDL_RenderCopy(juego->render, config->textura, NULL, &(config->destino));
+    SDL_RenderPresent(juego->render);
+
+    SDL_DestroyTexture(textTitulo);
+    TTF_CloseFont(titulo);
+}
+
+void dibujarMenuPausa(tJuego* juego, tBotones* reanudar, tBotones* volverAInicio)
+{
+    SDL_Rect subventana = {25, 25, 150, 150};
+    SDL_SetRenderDrawColor(juego->render, 222, 184, 135, 200);
+    SDL_RenderDrawRect(juego->render, &subventana);
+    SDL_RenderFillRect(juego->render, &subventana);
+    SDL_RenderPresent(juego->render);
+
+    reanudar->fuente = TTF_OpenFont("assets/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf", 16);
+    if (!reanudar->fuente)
+        printf("OpenFont: %s\n", TTF_GetError());
+
+    TTF_SizeUTF8(reanudar->fuente, "Reanudar", &(reanudar->destino.w), &(reanudar->destino.h));
+
+    reanudar->destino.x = 75;
+    reanudar->destino.y = 100;
+
+    reanudar->surface = TTF_RenderUTF8_Blended(reanudar->fuente, "Reanudar", colorTexto);
+    reanudar->textura = SDL_CreateTextureFromSurface(reanudar->render, reanudar->surface);
+    SDL_FreeSurface(reanudar->surface);
+
+    SDL_RenderCopy(reanudar->render, reanudar->textura, NULL, &(reanudar->destino));
+    SDL_RenderPresent(reanudar->render);
+
+    SDL_DestroyTexture(reanudar->fuente);
+    TTF_CloseFont(reanudar->fuente);
+
+
+    volverAInicio->fuente = TTF_OpenFont("assets/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf", 16);
+    if (!volverAInicio->fuente)
+        printf("OpenFont: %s\n", TTF_GetError());
+
+    TTF_SizeUTF8(volverAInicio->fuente, "Volver al inicio", &(volverAInicio->destino.w), &(volverAInicio->destino.h));
+
+    volverAInicio->destino.x = 75;
+    volverAInicio->destino.y = 100;
+
+    volverAInicio>surface = TTF_RenderUTF8_Blended(volverAInicio->fuente, "Volver al inicio", colorTexto);
+    volverAInicio->textura = SDL_CreateTextureFromSurface(volverAInicio->render, volverAInicio->surface);
+    SDL_FreeSurface(volverAInicio->surface);
+
+    SDL_RenderCopy(volverAInicio->render, volverAInicio->textura, NULL, &(volverAInicio->destino));
+    SDL_RenderPresent(volverAInicio->render);
+
+    SDL_DestroyTexture(volverAInicio->fuente);
+    TTF_CloseFont(volverAInicio->fuente);
+}

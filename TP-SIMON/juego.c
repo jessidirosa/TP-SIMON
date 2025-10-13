@@ -2,11 +2,17 @@
 #include "juego.h"
 #include "sonidos.h"
 #include "dibujos.h"
+#include "menus.h"
 
 bool puntoDentroCirculo(int x, int y, int cx, int cy, int r)
 {
     int dx = x - cx, dy = y - cy;
     return dx*dx + dy*dy <= r*r;
+}
+
+bool puntoEnRectangulo(int x, int y, int xRect, int yRect, int anchoRect, int altoRect)
+{
+    return (x >= xRect && x <= xRect + anchoRect) && (y >= yRect && y <= yRect + altoRect);
 }
 
 void inicializarPartida(tPartida* partida, tJuego* juego)
@@ -24,7 +30,7 @@ void inicializarPartida(tPartida* partida, tJuego* juego)
     partida->acoteDuracion = TIEMPO_ACOTADO_POR_NOTA;
     asignarSonidos(juego);
 
-    crearSecuenciaAleatoria(partida, juego); //despues va a diferir dependiendo los modos de juego elegidos en el menu
+    crearSecuenciaAleatoria(partida, juego); //despues va a diferir dependiendo los modos de juego elegidos en el menu. se carga en config
 }
 
 float duracionNota(tPartida* partida)
@@ -34,14 +40,18 @@ float duracionNota(tPartida* partida)
 
 void iniciarJuego(tPartida* partida, tJuego* juego, int** mat) //comienza la partida
 {
+    tBotones pausa;
     inicializarPartida(partida, juego);
+    dibujar(juego, mat);
+    dibujarBordes(juego);
+    dibujarBotonCentro(juego, &pausa, "Pausa");
 
     while(partida->estado != GAMEOVER && finalizarJuego(partida))
     {
         //ver circularidad de secuencia para que sea continua hasta que el jugador pierda (resize de vector)
         secuenciaJuego(partida, juego, mat); //mostrara la secuencia desde sec a psec a medida que avanza. el vector sec ya tendra en numeros la secuencia con el modo y los tonos definidos previamente en config
 
-        if(respuesta(partida, juego, mat) == ERROR) //registrara la respuesta del jugador y la ira guardando en res hasta detectar un error en el patron
+        if(respuesta(partida, juego, mat, &pausa) == ERROR) //registrara la respuesta del jugador y la ira guardando en res hasta detectar un error en el patron
             partida->estado = GAMEOVER;
 
         else
@@ -51,9 +61,12 @@ void iniciarJuego(tPartida* partida, tJuego* juego, int** mat) //comienza la par
             partida->tiempoNota = duracionNota(partida);
         }
     }
+
+    if(!finalizarJuego(partida))
+        juego->instancia = MENU;
 }
 
-int respuesta(tPartida* partida, tJuego* juego, int** mat)
+int respuesta(tPartida* partida, tJuego* juego, int** mat, tBotones* pausa)
 {
     int* p = partida->sec;
     SDL_Event evento;
@@ -61,6 +74,10 @@ int respuesta(tPartida* partida, tJuego* juego, int** mat)
     while (p < partida->psec)
     {
         SDL_WaitEvent(&evento);
+
+        if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, pausa->destino.x, pausa->destino.y, pausa->destino.w, pausa->destino.h))
+            menuPausa(juego);
+
         if (evento.type == SDL_MOUSEBUTTONDOWN && puntoDentroCirculo(evento.button.x, evento.button.y, CENTRO_PLAY_X, CENTRO_PLAY_Y, R_EXT))
         {
             juego->mx = evento.button.x;
@@ -215,7 +232,7 @@ int finalizarJuego(tPartida* partida)
     SDL_Event evento;
     SDL_PollEvent(&evento);
 
-    if(evento.type == SDL_MOUSEBUTTONDOWN &&  puntoDentroCirculo(evento.button.x, evento.button.y, CENTRO_PLAY_X, CENTRO_PLAY_Y, R_INT)) //Cambiar las macros por coord de boton QUIT
+    if(evento.type == SDL_MOUSEBUTTONDOWN &&  puntoEnRectangulo(evento.button.x, evento.button.y, QUIT_BOTON_X, QUIT_BOTON_Y, ANCHO_BOTON, ALTO_BOTON))
         return GAMEOVER;
     else
         return CONTINUA;

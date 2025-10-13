@@ -5,6 +5,7 @@
 #define AMPLITUD_TONO 32766
 
 #include <math.h>
+#include "sdl.h"
 
 Mix_Chunk* cargarSonido(const char *ruta);
 Mix_Chunk* crearTono(float frecuencia);

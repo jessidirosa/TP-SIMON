@@ -1,7 +1,8 @@
-#include "dibujos.h"
 #include "sdl.h"
 #include "juego.h"
 #include "sonidos.h"
+#include "dibujos.h"
+#include "menus.h"
 
 ///del ejemplo de proyecto que nos dieron
 //Mix_Chunk* cargarSonido(const char *ruta)

@@ -1,13 +1,20 @@
-#include "dibujos.h"
 #include "sdl.h"
 #include "juego.h"
 #include "sonidos.h"
+#include "dibujos.h"
+#include "menus.h"
 
 bool sdl_inicializar(tJuego* juego)
 {
     if (SDL_Init(SDL_INIT_EVERYTHING)) //siempre se inicializa, como TDA
     {
         printf("Error inicializando SDL: %s\n", SDL_GetError());
+        return false;
+    }
+
+    if(TTF_Init())
+    {
+        printf("Error inicializando TTF: %s\n", TTF_GetError());
         return false;
     }
 
@@ -57,6 +64,11 @@ bool sdl_inicializar(tJuego* juego)
 
     SDL_FreeSurface(juego->surface);  // ya no se necesita (queda la Texture)
 
+    // Inicializa SDL_mixer
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+        printf("[ERROR] No se pudo inicializar el audio: %s\n", Mix_GetError());
+
+    juego->instancia = MENU;
 
     return true;
 }
@@ -69,6 +81,7 @@ void sdl_limpiar(tJuego* juego)
     SDL_DestroyRenderer(juego->render);
     //destruimos la ventana creada, pues mem dinamica
     SDL_DestroyWindow(juego->ventana);
+    TTF_Quit();
     //cierra todos los subsistemas que SDL abra y use
     SDL_Quit();
     return;

@@ -7,10 +7,16 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
+#include <SDL_ttf.h>
 
 #define ALTO_VENTANA 680
 #define ANCHO_VENTANA 680
 #define ERROR_INICIALIZACION -1;
+
+#define JUGANDO 1
+#define CONFIG 2
+#define MENU 3
+#define SALIR 4
 
 
 typedef struct
@@ -23,8 +29,18 @@ typedef struct
     int* tonosBotones;
     int mx; //coordenada x del mouse
     int my; //coordenada y del mouse
+    int instancia;
 
 } tJuego;
+
+typedef struct
+{
+    SDL_Rect destino;
+    TTF_Font* fuente;
+    SDL_Texture* textura;
+    SDL_Surface* surface;
+
+} tBotones;
 
 bool sdl_inicializar(tJuego* juego);
 void sdl_limpiar(tJuego* juego);
