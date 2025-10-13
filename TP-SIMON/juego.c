@@ -51,9 +51,6 @@ void iniciarJuego(tPartida* partida, tJuego* juego, int** mat) //comienza la par
         //ver circularidad de secuencia para que sea continua hasta que el jugador pierda (resize de vector)
         secuenciaJuego(partida, juego, mat); //mostrara la secuencia desde sec a psec a medida que avanza. el vector sec ya tendra en numeros la secuencia con el modo y los tonos definidos previamente en config
 
-//        if(respuesta(partida, juego, mat, &volver) == SALIR)
-//            partida->estado = SALIR;
-
         if(respuesta(partida, juego, mat, &volver) == ERROR)
             partida->estado = GAMEOVER;
         else

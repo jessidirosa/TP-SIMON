@@ -4,7 +4,7 @@
 #include "dibujos.h"
 #include "menus.h"
 
-void menuInicial(tJuego* juego, tPartida* partida)
+void menuInicial(tJuego* juego, tPartida* partida) ///faltaria agregar el tema de que ponga su nombre por el ranking
 {
     tBotones jugar;
     tBotones config;
@@ -32,6 +32,41 @@ void menuInicial(tJuego* juego, tPartida* partida)
 
     TTF_CloseFont(jugar.fuente);
     TTF_CloseFont(config.fuente);
+}
+
+void menuConfig(tJuego* juego, tPartida* partido)
+{
+    tBotones modos;
+    tBotones duracionInicial;
+    tBotones cantBotones;
+    tBotones atras;
+    SDL_Event evento;
+
+    //limpia el lienzo
+    SDL_RenderClear(juego->render);
+    //pega fondo en el render
+    SDL_RenderCopy(juego->render, juego->fondo, NULL, NULL);
+    dibujarMenuConfig(juego, &modos, &duracionInicial, &cantBotones, &atras);
+    SDL_PollEvent(&evento);
+
+    if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, modos.destino.x, modos.destino.y, ANCHO_BOTON, ALTO_BOTON))
+    {
+        ///3 botones con los modos, se guarda en partida->modoJuego
+    }
+
+    if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, duracionInicial.destino.x, duracionInicial.destino.y, ANCHO_BOTON, ALTO_BOTON))
+    {
+        ///carga por teclado?
+    }
+
+    if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, cantBotones.destino.x, cantBotones.destino.y, ANCHO_BOTON, ALTO_BOTON))
+    {
+        ///6 botones con los num del 3 al 8 para que elija, y eso se guarda en juego->botones
+    }
+
+    if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, atras.destino.x, atras.destino.y, ANCHO_BOTON, ALTO_BOTON))
+        juego->instancia = MENU;
+
 }
 
 ///si llegamos se hace, sino no
