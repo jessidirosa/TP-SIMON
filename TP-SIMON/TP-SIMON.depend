@@ -1,9 +1,10 @@
 # depslib dependency file v1.0
-1760323031 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\main.c
+1760373352 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\main.c
 	"dibujos.h"
 	"sdl.h"
 	"juego.h"
 	"sonidos.h"
+	"menus.h"
 
 1758753063 c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\tp-simon.h
 	<stdio.h>
@@ -466,7 +467,7 @@
 1758753142 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\tp-simon.c
 	"tp-simon.h"
 
-1760322032 c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\sdl.h
+1760373352 c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\sdl.h
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
@@ -481,7 +482,7 @@
 	"dibujos.h"
 	"menus.h"
 
-1760322032 c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\juego.h
+1760367611 c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\juego.h
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
@@ -490,7 +491,7 @@
 	<time.h>
 	"sdl.h"
 
-1760323718 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\juego.c
+1760367990 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\juego.c
 	"sdl.h"
 	"juego.h"
 	"sonidos.h"
@@ -508,14 +509,14 @@
 	"dibujos.h"
 	"menus.h"
 
-1760322101 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\dibujos.c
+1760372781 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\dibujos.c
 	"sdl.h"
 	"juego.h"
 	"sonidos.h"
 	"dibujos.h"
 	"menus.h"
 
-1760315394 c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\dibujos.h
+1760372019 c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\dibujos.h
 	<math.h>
 	"sdl.h"
 
@@ -524,10 +525,10 @@
 	"begin_code.h"
 	"close_code.h"
 
-1760308845 c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\menus.h
+1760373417 c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\menus.h
 	"sdl.h"
 
-1760323483 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\menus.c
+1760374626 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\menus.c
 	"sdl.h"
 	"juego.h"
 	"sonidos.h"

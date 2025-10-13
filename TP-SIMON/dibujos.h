@@ -27,8 +27,13 @@ int** crearMatriz(int cf, int cc, size_t tam);
 void dibujarBordes(tJuego* juego);
 void iluminarBoton(int boton, tJuego* juego, int** mat);
 void apagarBoton(int boton, tJuego* juego, int** mat);
-void dibujarMenu(tJuego* juego, tBotones* jugar, tBotones* config);
+void dibujarMenu(tJuego* juego, tBotones* jugar, tBotones* config, tBotones* salir);
 void dibujarBotonCentro(tJuego* juego, tBotones* boton, char* nombre);
-void dibujarMenuPausa(tJuego* juego, tBotones* reanudar, tBotones* volverAInicio);
+void dibujarMenuConfig(tJuego* juego, tBotones* modos, tBotones* duracionInicial, tBotones* cantBotones, tBotones* atras);
+void dibujarBotones(tBotones* boton, char* nombre, tJuego* juego, int x, int y, char* fuente, int tam);
+void dibujarMenuModos(tJuego* juego, tBotones* modoSchonberg, tBotones* modoMozart, tBotones* modoDesafio, tBotones* atras);
+void dibujarMenuBotones(tJuego* juego, tBotones* b3, tBotones* b4, tBotones* b5, tBotones* b6, tBotones* b7, tBotones* b8, tBotones* atras);
+
+//void dibujarMenuPausa(tJuego* juego, tBotones* reanudar, tBotones* volverAInicio);
 
 #endif // DIBUJOS_H_INCLUDED

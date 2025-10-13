@@ -56,11 +56,9 @@ void crearSecuenciaAleatoria(tPartida* partida, tJuego* juego);
 void secuenciaJuego(tPartida* partida, tJuego* juego, int** mat);
 int respuesta(tPartida* partida, tJuego* juego, int** mat, tBotones* pausa);
 bool puntoDentroCirculo(int x, int y, int cx, int cy, int r);
-int finalizarJuego(tPartida* partida);
 void liberarMemoria(tJuego* juego, int** mat, tPartida* partida);
 float duracionNota(tPartida* partida);
 bool puntoEnRectangulo(int x, int y, int xRect, int yRect, int anchoRect, int altoRect);
-
-
+void configPorDefecto(tJuego* juego, tPartida* partida);
 
 #endif // JUEGO_H_INCLUDED

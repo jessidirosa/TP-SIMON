@@ -2,6 +2,7 @@
 #include "sdl.h"
 #include "juego.h"
 #include "sonidos.h"
+#include "menus.h"
 
 int main(int argc, char* argv[])
 {
@@ -25,27 +26,34 @@ int main(int argc, char* argv[])
         return ERROR_INICIALIZACION;
     }
 
+    configPorDefecto(&juego, &partida);//por si el jugador no configura nada a la primera
     while(corriendo)
     {
-        //presenta lo hecho en el render
-        SDL_RenderPresent(juego.render);
-
         if(juego.instancia == MENU)
             menuInicial(&juego, &partida);
 
         if(juego.instancia == SALIR)
             corriendo = false;
 
-//        if(juego.instancia == CONFIG)
-//            configuracion(&juego, &partida);
+        if(juego.instancia == CONFIG)
+            menuConfig(&juego, &partida);
+
+        if(juego.instancia == MODOS)
+            menuModos(&juego, &partida);
+
+        if(juego.instancia == BOTONES)
+            menuCantBotones(&juego, &partida);
+
+        if(juego.instancia == DURACION_INICIAL)
+            menuDuracionInicial(&juego, &partida);
 
         if(juego.instancia == JUGANDO)
         {
-            ///esto entra del menu
-            juego.botones = 7;
             dibujar(&juego, mat);
             dibujarBordes(&juego);
             dibujarBotonCentro(&juego, &iniciar, "Iniciar");
+            //presenta lo hecho en el render
+            SDL_RenderPresent(juego.render);
             //precisamos captar cada evento
             //para decidir que hacer con el
             while(SDL_PollEvent(&evento)) //se usa para sacar todos los eventos que van ocurriendo y ver que hacemos uno por uno

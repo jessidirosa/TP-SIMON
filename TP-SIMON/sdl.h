@@ -17,6 +17,9 @@
 #define CONFIG 2
 #define MENU 3
 #define SALIR 4
+#define MODOS 5
+#define BOTONES 6
+#define DURACION_INICIAL 7
 
 
 typedef struct

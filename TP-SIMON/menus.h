@@ -10,14 +10,14 @@
 #define QUIT_BOTON_X 100
 #define QUIT_BOTON_Y 100
 
-#define PAUSA_BOTON_X 100
-#define PAUSA_BOTON_Y 10
-
-#define ANCHO_BOTON 50
-#define ALTO_BOTON 50
-
 
 
 void menuInicial(tJuego* juego, tPartida* partida);
+void menuConfig(tJuego* juego, tPartida* partida);
+void menuModos(tJuego* juego, tPartida* partida);
+void menuCantBotones(tJuego* juego, tPartida* partida);
+void menuDuracionInicial(tJuego* juego, tPartida* partida);
+
+
 
 #endif // MENUS_H_INCLUDED

@@ -26,11 +26,18 @@ void inicializarPartida(tPartida* partida, tJuego* juego)
     partida->psec = partida->sec + 1;
     partida->ranking->score = 0;
     partida->estado = CONTINUA;
-    partida->tiempoNota = TIEMPO_INICIAL; //puede que ya llegue a la funcion con esto ya asignado porque se cambia en la configuracion
     partida->acoteDuracion = TIEMPO_ACOTADO_POR_NOTA;
     asignarSonidos(juego);
 
-    crearSecuenciaAleatoria(partida, juego); //despues va a diferir dependiendo los modos de juego elegidos en el menu. se carga en config
+    if(partida->modoJuego == SCHONBERG)
+        crearSecuenciaAleatoria(partida, juego);
+
+//    if(partida->modoJuego = MOZART)
+//        cargarSecuenciaConArchivo(partida, juego);
+
+//    if(partida->modoJuego == DESAFIO)
+//        cargarArchivoConIngresoJugador(partida, juego);
+
 }
 
 float duracionNota(tPartida* partida)
@@ -46,7 +53,7 @@ void iniciarJuego(tPartida* partida, tJuego* juego, int** mat) //comienza la par
     dibujarBordes(juego);
     dibujarBotonCentro(juego, &volver, "Volver");
 
-    while(partida->estado != GAMEOVER && finalizarJuego(partida))
+    while(partida->estado != GAMEOVER)
     {
         //ver circularidad de secuencia para que sea continua hasta que el jugador pierda (resize de vector)
         secuenciaJuego(partida, juego, mat); //mostrara la secuencia desde sec a psec a medida que avanza. el vector sec ya tendra en numeros la secuencia con el modo y los tonos definidos previamente en config
@@ -226,13 +233,9 @@ void liberarMemoria(tJuego* juego, int** mat, tPartida* partida)
     free(juego->tonosBotones);
 }
 
-int finalizarJuego(tPartida* partida)
+void configPorDefecto(tJuego* juego, tPartida* partida)
 {
-    SDL_Event evento;
-    SDL_PollEvent(&evento);
-
-    if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, QUIT_BOTON_X, QUIT_BOTON_Y, ANCHO_BOTON, ALTO_BOTON))
-        return GAMEOVER;
-    else
-        return CONTINUA;
+    partida->modoJuego = SCHONBERG;
+    partida->tiempoNota = TIEMPO_INICIAL;
+    juego->botones = 4;
 }
