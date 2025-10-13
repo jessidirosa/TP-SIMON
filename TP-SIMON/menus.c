@@ -149,17 +149,21 @@ void menuCantBotones(tJuego* juego, tPartida* partida)
 
 }
 
-void menuDuracionInicial(tJuego* juego, tPartida* partida)
-{
-    SDL_Event evento;
-    SDL_StartTextInput();
-
-    if(evento.type == SDL_TEXTINPUT)
-    //en proceso
-
-
-    SDL_StopTextInput();
-}
+//void menuDuracionInicial(tJuego* juego, tPartida* partida)
+//{
+//    SDL_Event evento;
+//    char* buffer = malloc(sizeof(MAX_DURACION));
+//    SDL_StartTextInput();
+//
+//    if(evento.type == SDL_TEXTINPUT)
+//    {
+//
+//    }
+//    //en proceso
+//
+//
+//    SDL_StopTextInput();
+//}
 
 
 ///si llegamos se hace, sino no

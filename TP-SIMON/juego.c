@@ -24,7 +24,7 @@ void inicializarPartida(tPartida* partida, tJuego* juego)
         return;
 
     partida->psec = partida->sec + 1;
-    partida->ranking->score = 0;
+    partida->ranking.score = 0;
     partida->estado = CONTINUA;
     partida->acoteDuracion = TIEMPO_ACOTADO_POR_NOTA;
     asignarSonidos(juego);
@@ -48,6 +48,7 @@ float duracionNota(tPartida* partida)
 void iniciarJuego(tPartida* partida, tJuego* juego, int** mat) //comienza la partida
 {
     tBotones volver;
+    int vidas = CANT_VIDAS;
     inicializarPartida(partida, juego);
     dibujar(juego, mat);
     dibujarBordes(juego);
@@ -62,14 +63,17 @@ void iniciarJuego(tPartida* partida, tJuego* juego, int** mat) //comienza la par
             partida->estado = GAMEOVER;
         else
         {
-            partida->ranking->score++;
+            partida->ranking.score++;
             partida->psec++;
             partida->tiempoNota = duracionNota(partida);
         }
     }
 
+    ///funcion: cargar en archivo de rankings el tRanking
+    ///funcion: ordenar archivo ranking
+
     //poner de reiniciarlo o algo
-    juego->instancia = MENU;
+    juego->instancia = MENU; ///instancia RANKING: muestra ranking y boton reiniciar
 }
 
 int respuesta(tPartida* partida, tJuego* juego, int** mat, tBotones* volver)
@@ -143,7 +147,7 @@ void crearSecuenciaAleatoria(tPartida* partida, tJuego* juego) //modo schonberg
     }
 }
 
-//hacer funcion de crearArchivoRanking y ordenarArchivo
+//hacer funcion de ordenarArchivo
 bool insertarArchivoRankingSinDup(tPartida* partida)
 {
     FILE* pf = fopen("Rankings.bin", "r+b");
@@ -153,13 +157,18 @@ bool insertarArchivoRankingSinDup(tPartida* partida)
         return false; //no se pudo abrir
 
     fread(&rankArch, sizeof(tRanking), 1, pf);
-    while(!feof(pf) && strcmp(partida->ranking->jugador,rankArch.jugador))
+    while(!feof(pf) && strcmp(partida->ranking.jugador,rankArch.jugador))
         fread(&rankArch, sizeof(tRanking), 1, pf);
 
-    if(!strcmp(partida->ranking->jugador,rankArch.jugador))
+    if(!strcmp(partida->ranking.jugador,rankArch.jugador))
         fseek(pf, -1L, SEEK_CUR);
 
-    fwrite(partida->ranking, sizeof(tRanking), 1, pf);
+    else
+    {
+        fseek(pf, 0L, SEEK_END);
+        fwrite(&(partida->ranking.jugador), sizeof(tRanking), 1, pf);
+    }
+
     fclose(pf);
 
     return true; //todo ok

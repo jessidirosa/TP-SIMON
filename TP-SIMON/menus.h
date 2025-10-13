@@ -10,6 +10,7 @@
 #define QUIT_BOTON_X 100
 #define QUIT_BOTON_Y 100
 
+#define MIN_DURACION 2000
 
 
 void menuInicial(tJuego* juego, tPartida* partida);

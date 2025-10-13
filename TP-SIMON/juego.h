@@ -20,6 +20,8 @@
 #define CENTRO_PLAY_X 99
 #define CENTRO_PLAY_Y 99
 
+#define CANT_VIDAS 3
+
 typedef struct
 {
     char jugador[MAX_NOMBRE];
@@ -30,7 +32,7 @@ typedef struct
 {
     int* sec;
     int* psec;
-    tRanking* ranking;
+    tRanking ranking;
     int estado;
     float tiempoNota;
     float acoteDuracion;
