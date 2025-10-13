@@ -196,7 +196,7 @@ void dibujarBotonCentro(tJuego* juego, tBotones* boton, char* nombre)
     SDL_RenderCopy(juego->render, boton->textura, NULL, &(boton->destino));
     SDL_RenderPresent(juego->render);
 
-    SDL_DestroyTexture(boton->fuente);
+    SDL_DestroyTexture(boton->textura);
     TTF_CloseFont(boton->fuente);
 }
 
@@ -260,50 +260,53 @@ void dibujarMenu(tJuego* juego, tBotones* jugar, tBotones* config)
     TTF_CloseFont(titulo);
 }
 
-void dibujarMenuPausa(tJuego* juego, tBotones* reanudar, tBotones* volverAInicio)
-{
-    SDL_Rect subventana = {25, 25, 150, 150};
-    SDL_SetRenderDrawColor(juego->render, 222, 184, 135, 200);
-    SDL_RenderDrawRect(juego->render, &subventana);
-    SDL_RenderFillRect(juego->render, &subventana);
-    SDL_RenderPresent(juego->render);
-
-    reanudar->fuente = TTF_OpenFont("assets/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf", 16);
-    if (!reanudar->fuente)
-        printf("OpenFont: %s\n", TTF_GetError());
-
-    TTF_SizeUTF8(reanudar->fuente, "Reanudar", &(reanudar->destino.w), &(reanudar->destino.h));
-
-    reanudar->destino.x = 75;
-    reanudar->destino.y = 100;
-
-    reanudar->surface = TTF_RenderUTF8_Blended(reanudar->fuente, "Reanudar", colorTexto);
-    reanudar->textura = SDL_CreateTextureFromSurface(reanudar->render, reanudar->surface);
-    SDL_FreeSurface(reanudar->surface);
-
-    SDL_RenderCopy(reanudar->render, reanudar->textura, NULL, &(reanudar->destino));
-    SDL_RenderPresent(reanudar->render);
-
-    SDL_DestroyTexture(reanudar->fuente);
-    TTF_CloseFont(reanudar->fuente);
-
-
-    volverAInicio->fuente = TTF_OpenFont("assets/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf", 16);
-    if (!volverAInicio->fuente)
-        printf("OpenFont: %s\n", TTF_GetError());
-
-    TTF_SizeUTF8(volverAInicio->fuente, "Volver al inicio", &(volverAInicio->destino.w), &(volverAInicio->destino.h));
-
-    volverAInicio->destino.x = 75;
-    volverAInicio->destino.y = 100;
-
-    volverAInicio>surface = TTF_RenderUTF8_Blended(volverAInicio->fuente, "Volver al inicio", colorTexto);
-    volverAInicio->textura = SDL_CreateTextureFromSurface(volverAInicio->render, volverAInicio->surface);
-    SDL_FreeSurface(volverAInicio->surface);
-
-    SDL_RenderCopy(volverAInicio->render, volverAInicio->textura, NULL, &(volverAInicio->destino));
-    SDL_RenderPresent(volverAInicio->render);
-
-    SDL_DestroyTexture(volverAInicio->fuente);
-    TTF_CloseFont(volverAInicio->fuente);
-}
+///si llegamos se hace, sino no
+//void dibujarMenuPausa(tJuego* juego, tBotones* reanudar, tBotones* volverAInicio)
+//{
+//    SDL_Rect subventana = {25, 25, 150, 150};
+//    SDL_Color colorTexto = {255, 255, 255, 240}; //blanco
+//
+//    SDL_SetRenderDrawColor(juego->render, 222, 184, 135, 200);
+//    SDL_RenderDrawRect(juego->render, &subventana);
+//    SDL_RenderFillRect(juego->render, &subventana);
+//    SDL_RenderPresent(juego->render);
+//
+//    reanudar->fuente = TTF_OpenFont("assets/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf", 16);
+//    if (!reanudar->fuente)
+//        printf("OpenFont: %s\n", TTF_GetError());
+//
+//    TTF_SizeUTF8(reanudar->fuente, "Reanudar", &(reanudar->destino.w), &(reanudar->destino.h));
+//
+//    reanudar->destino.x = 75;
+//    reanudar->destino.y = 75;
+//
+//    reanudar->surface = TTF_RenderUTF8_Blended(reanudar->fuente, "Reanudar", colorTexto);
+//    reanudar->textura = SDL_CreateTextureFromSurface(juego->render, reanudar->surface);
+//    SDL_FreeSurface(reanudar->surface);
+//
+//    SDL_RenderCopy(juego->render, reanudar->textura, NULL, &(reanudar->destino));
+//    SDL_RenderPresent(juego->render);
+//
+//    SDL_DestroyTexture(reanudar->textura);
+//    TTF_CloseFont(reanudar->fuente);
+//
+//
+//    volverAInicio->fuente = TTF_OpenFont("assets/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf", 12);
+//    if (!volverAInicio->fuente)
+//        printf("OpenFont: %s\n", TTF_GetError());
+//
+//    TTF_SizeUTF8(volverAInicio->fuente, "Volver al inicio", &(volverAInicio->destino.w), &(volverAInicio->destino.h));
+//
+//    volverAInicio->destino.x = 75;
+//    volverAInicio->destino.y = 100;
+//
+//    volverAInicio->surface = TTF_RenderUTF8_Blended(volverAInicio->fuente, "Volver al inicio", colorTexto);
+//    volverAInicio->textura = SDL_CreateTextureFromSurface(juego->render, volverAInicio->surface);
+//    SDL_FreeSurface(volverAInicio->surface);
+//
+//    SDL_RenderCopy(juego->render, volverAInicio->textura, NULL, &(volverAInicio->destino));
+//    SDL_RenderPresent(juego->render);
+//
+//    SDL_DestroyTexture(volverAInicio->textura);
+//    TTF_CloseFont(volverAInicio->fuente);
+//}

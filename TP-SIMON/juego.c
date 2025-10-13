@@ -40,20 +40,22 @@ float duracionNota(tPartida* partida)
 
 void iniciarJuego(tPartida* partida, tJuego* juego, int** mat) //comienza la partida
 {
-    tBotones pausa;
+    tBotones volver;
     inicializarPartida(partida, juego);
     dibujar(juego, mat);
     dibujarBordes(juego);
-    dibujarBotonCentro(juego, &pausa, "Pausa");
+    dibujarBotonCentro(juego, &volver, "Volver");
 
     while(partida->estado != GAMEOVER && finalizarJuego(partida))
     {
         //ver circularidad de secuencia para que sea continua hasta que el jugador pierda (resize de vector)
         secuenciaJuego(partida, juego, mat); //mostrara la secuencia desde sec a psec a medida que avanza. el vector sec ya tendra en numeros la secuencia con el modo y los tonos definidos previamente en config
 
-        if(respuesta(partida, juego, mat, &pausa) == ERROR) //registrara la respuesta del jugador y la ira guardando en res hasta detectar un error en el patron
-            partida->estado = GAMEOVER;
+//        if(respuesta(partida, juego, mat, &volver) == SALIR)
+//            partida->estado = SALIR;
 
+        if(respuesta(partida, juego, mat, &volver) == ERROR)
+            partida->estado = GAMEOVER;
         else
         {
             partida->ranking->score++;
@@ -62,11 +64,11 @@ void iniciarJuego(tPartida* partida, tJuego* juego, int** mat) //comienza la par
         }
     }
 
-    if(!finalizarJuego(partida))
-        juego->instancia = MENU;
+    //poner de reiniciarlo o algo
+    juego->instancia = MENU;
 }
 
-int respuesta(tPartida* partida, tJuego* juego, int** mat, tBotones* pausa)
+int respuesta(tPartida* partida, tJuego* juego, int** mat, tBotones* volver)
 {
     int* p = partida->sec;
     SDL_Event evento;
@@ -75,8 +77,8 @@ int respuesta(tPartida* partida, tJuego* juego, int** mat, tBotones* pausa)
     {
         SDL_WaitEvent(&evento);
 
-        if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, pausa->destino.x, pausa->destino.y, pausa->destino.w, pausa->destino.h))
-            menuPausa(juego);
+        if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, volver->destino.x, volver->destino.y, volver->destino.w, volver->destino.h))
+            return ERROR;
 
         if (evento.type == SDL_MOUSEBUTTONDOWN && puntoDentroCirculo(evento.button.x, evento.button.y, CENTRO_PLAY_X, CENTRO_PLAY_Y, R_EXT))
         {
@@ -232,7 +234,7 @@ int finalizarJuego(tPartida* partida)
     SDL_Event evento;
     SDL_PollEvent(&evento);
 
-    if(evento.type == SDL_MOUSEBUTTONDOWN &&  puntoEnRectangulo(evento.button.x, evento.button.y, QUIT_BOTON_X, QUIT_BOTON_Y, ANCHO_BOTON, ALTO_BOTON))
+    if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, QUIT_BOTON_X, QUIT_BOTON_Y, ANCHO_BOTON, ALTO_BOTON))
         return GAMEOVER;
     else
         return CONTINUA;

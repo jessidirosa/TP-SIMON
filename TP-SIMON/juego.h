@@ -31,7 +31,7 @@ typedef struct
     int* sec;
     int* psec;
     tRanking* ranking;
-    bool estado;
+    int estado;
     float tiempoNota;
     float acoteDuracion;
     int modoJuego;

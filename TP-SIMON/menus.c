@@ -23,7 +23,7 @@ void menuInicial(tJuego* juego, tPartida* partida)
     if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, config.destino.x, config.destino.y, ANCHO_BOTON, ALTO_BOTON))
         juego->instancia = CONFIG;
 
-    if(evento.type == SDL_QUIT && puntoEnRectangulo(evento.button.x, evento.button.y, config.destino.x, config.destino.y, ANCHO_BOTON, ALTO_BOTON))
+    if(evento.type == SDL_QUIT || puntoEnRectangulo(evento.button.x, evento.button.y, config.destino.x, config.destino.y, ANCHO_BOTON, ALTO_BOTON))
         juego->instancia = SALIR;
 
 
@@ -34,17 +34,21 @@ void menuInicial(tJuego* juego, tPartida* partida)
     TTF_CloseFont(config.fuente);
 }
 
-void menuPausa(tJuego* juego)
-{
-    tBotones reanudar;
-    tBotones volverAInicio;
-    dibujarMenuPausa(juego, reanudar, volverAInicio);
-
-    if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, reanudar.destino.x, reanudar.destino.y, ANCHO_BOTON, ALTO_BOTON))
-    {
-        juego->instancia = JUGANDO;
-        SDL_RenderClear(juego->render);
-    }
-
-
-}
+///si llegamos se hace, sino no
+//void menuPausa(tJuego* juego)
+//{
+//    tBotones reanudar;
+//    tBotones volverAInicio;
+//    SDL_Event evento;
+//    dibujarMenuPausa(juego, &reanudar, &volverAInicio);
+//
+//    SDL_PollEvent(&evento);
+//
+//    if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, reanudar.destino.x, reanudar.destino.y, ANCHO_BOTON, ALTO_BOTON))
+//    {
+//        juego->instancia = JUGANDO;
+//        SDL_RenderClear(juego->render);
+//    }
+//
+//
+//}

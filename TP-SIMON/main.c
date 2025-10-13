@@ -71,11 +71,7 @@ int main(int argc, char* argv[])
                 case SDL_MOUSEBUTTONDOWN://guardamos coordenadas de a donde toco para iluminar boton y ver si esta bien o no
                     //toca Play (x,y)
                     if(puntoDentroCirculo(evento.button.x, evento.button.y, CENTRO_PLAY_X, CENTRO_PLAY_Y, R_INT))
-                    {
                         iniciarJuego(&partida, &juego, mat);
-                        if(partida.estado == GAMEOVER)
-                            corriendo = false;
-                    }
 
                     break;
                 }
