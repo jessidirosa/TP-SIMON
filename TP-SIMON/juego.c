@@ -45,6 +45,19 @@ float duracionNota(tPartida* partida)
     return partida->tiempoNota * (1 - partida->acoteDuracion);
 }
 
+bool crearArchivoRanking()
+{
+    FILE* pf = fopen("Rankings.bin", "wb");
+    if(!pf)
+    {
+        printf("error creando archivo rankings");
+        return false;
+    }
+
+    fclose(pf);
+    return true;
+}
+
 void iniciarJuego(tPartida* partida, tJuego* juego, int** mat) //comienza la partida
 {
     tBotones volver;
@@ -166,13 +179,34 @@ bool insertarArchivoRankingSinDup(tPartida* partida)
     else
     {
         fseek(pf, 0L, SEEK_END);
-        fwrite(&(partida->ranking.jugador), sizeof(tRanking), 1, pf);
+        fwrite(&(partida->ranking), sizeof(tRanking), 1, pf);
     }
 
     fclose(pf);
 
     return true; //todo ok
 }
+
+bool mostrarArchivo(char* nombre)
+{
+    tRanking rankArch;
+    FILE* pf = fopen(nombre, "rb");
+    if(!pf)
+        return false;
+
+    printf("JUGADOR\tPUNTAJE\n");
+    fread(&rankArch, sizeof(tRanking), 1, pf);
+    while(!feof(pf))
+    {
+        printf("%s\t%d\n", rankArch.jugador, rankArch.score);
+        fread(&rankArch, sizeof(tRanking), 1, pf);
+    }
+
+    fclose(pf);
+    return true;
+}
+
+
 
 //llamada por funcion respuesta
 int botonSeleccionar(tJuego* juego)

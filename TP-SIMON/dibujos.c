@@ -200,7 +200,7 @@ void dibujarBotonCentro(tJuego* juego, tBotones* boton, char* nombre)
     TTF_CloseFont(boton->fuente);
 }
 
-void dibujarMenu(tJuego* juego, tBotones* jugar, tBotones* config, tBotones* salir)
+void dibujarMenu(tJuego* juego, tBotones* jugar, tBotones* config, tBotones* salir, tBotones* ranking)
 {
     TTF_Font* titulo;
     SDL_Texture* textTitulo;
@@ -226,6 +226,7 @@ void dibujarMenu(tJuego* juego, tBotones* jugar, tBotones* config, tBotones* sal
 
     dibujarBotones(jugar, "Jugar", juego, 75, 90, "assets/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf", 16);
     dibujarBotones(config, "Configuracion", juego, 40, 110, "assets/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf", 16);
+    dibujarBotones(ranking, "Ranking", juego, 65, 130, "assets/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf", 16);
     dibujarBotones(salir, "Salir", juego, 75, 160, "assets/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf", 16);
 
     SDL_RenderCopy(juego->render, textTitulo, NULL, &destTitulo);
@@ -233,11 +234,14 @@ void dibujarMenu(tJuego* juego, tBotones* jugar, tBotones* config, tBotones* sal
     //funcion destruir Fuentes y Texturas
     SDL_DestroyTexture(textTitulo);
     SDL_DestroyTexture(jugar->textura);
-    SDL_DestroyTexture(config->textura);
+    SDL_DestroyTexture(salir->textura);
+    SDL_DestroyTexture(ranking->textura);
 
     TTF_CloseFont(titulo);
     TTF_CloseFont(jugar->fuente);
     TTF_CloseFont(config->fuente);
+    TTF_CloseFont(salir->fuente);
+    TTF_CloseFont(ranking->fuente);
 }
 
 void dibujarBotones(tBotones* boton, char* nombre, tJuego* juego, int x, int y, char* fuente, int tam)

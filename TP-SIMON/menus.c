@@ -8,13 +8,14 @@ void menuInicial(tJuego* juego, tPartida* partida) ///faltaria agregar el tema d
 {
     tBotones jugar;
     tBotones config;
+    tBotones ranking;
     tBotones salir;
     SDL_Event evento;
     //limpia el lienzo
     SDL_RenderClear(juego->render);
     //pega fondo en el render
     SDL_RenderCopy(juego->render, juego->fondo, NULL, NULL);
-    dibujarMenu(juego, &jugar, &config, &salir);
+    dibujarMenu(juego, &jugar, &config, &salir, &ranking);
     SDL_RenderPresent(juego->render);
     SDL_PollEvent(&evento);
 
@@ -23,6 +24,9 @@ void menuInicial(tJuego* juego, tPartida* partida) ///faltaria agregar el tema d
 
     if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, config.destino.x, config.destino.y, config.destino.w, config.destino.h))
         juego->instancia = CONFIG;
+
+    if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, ranking.destino.x, ranking.destino.y, ranking.destino.w, ranking.destino.h))
+        juego->instancia = RANKING;
 
     if(evento.type == SDL_QUIT || (evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, salir.destino.x, salir.destino.y, salir.destino.w, salir.destino.h)))
         juego->instancia = SALIR;

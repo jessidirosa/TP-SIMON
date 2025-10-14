@@ -20,6 +20,7 @@
 #define MODOS 5
 #define BOTONES 6
 #define DURACION_INICIAL 7
+#define RANKING 8
 
 
 typedef struct

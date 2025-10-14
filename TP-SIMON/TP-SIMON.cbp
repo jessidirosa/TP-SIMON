@@ -55,6 +55,7 @@
 			<Add library="lib/SDL2_ttf-2.21.2-win32-x64/SDL2_ttf-2.21.2/x86_64-w64-mingw32/lib/libSDL2_ttf.dll.a" />
 			<Add directory="lib/SDL2_ttf-2.21.2-win32-x64/SDL2_ttf-2.21.2/x86_64-w64-mingw32/lib" />
 		</Linker>
+		<Unit filename="Rankings.bin" />
 		<Unit filename="dibujos.c">
 			<Option compilerVar="CC" />
 		</Unit>

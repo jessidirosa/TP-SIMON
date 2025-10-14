@@ -27,7 +27,7 @@ int** crearMatriz(int cf, int cc, size_t tam);
 void dibujarBordes(tJuego* juego);
 void iluminarBoton(int boton, tJuego* juego, int** mat);
 void apagarBoton(int boton, tJuego* juego, int** mat);
-void dibujarMenu(tJuego* juego, tBotones* jugar, tBotones* config, tBotones* salir);
+void dibujarMenu(tJuego* juego, tBotones* jugar, tBotones* config, tBotones* salir, tBotones* ranking);
 void dibujarBotonCentro(tJuego* juego, tBotones* boton, char* nombre);
 void dibujarMenuConfig(tJuego* juego, tBotones* modos, tBotones* duracionInicial, tBotones* cantBotones, tBotones* atras);
 void dibujarBotones(tBotones* boton, char* nombre, tJuego* juego, int x, int y, char* fuente, int tam);

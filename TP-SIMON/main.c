@@ -20,11 +20,16 @@ int main(int argc, char* argv[])
     if(!juego.tonosBotones)
         return ERROR;
 
+//    if(!crearArchivoRanking())
+//        return ERROR;
+
     if(!sdl_inicializar(&juego))
     {
         sdl_limpiar(&juego);
         return ERROR_INICIALIZACION;
     }
+
+    mostrarArchivo("Rankings.bin");
 
     configPorDefecto(&juego, &partida);//por si el jugador no configura nada a la primera
     while(corriendo)
@@ -44,11 +49,15 @@ int main(int argc, char* argv[])
         if(juego.instancia == BOTONES)
             menuCantBotones(&juego, &partida);
 
+//        if(juego.instancia == RANKING)
+//            mostrarRanking(&juego, &partida);
+
 //        if(juego.instancia == DURACION_INICIAL)
 //            menuDuracionInicial(&juego, &partida);
 
         if(juego.instancia == JUGANDO)
         {
+            partida.ranking.jugador = "juana";
             ///funcion: pedir nombre jugador y guardarlo en partida->ranking.jugador
             dibujar(&juego, mat);
             dibujarBordes(&juego);
@@ -81,8 +90,11 @@ int main(int argc, char* argv[])
                     if(puntoDentroCirculo(evento.button.x, evento.button.y, CENTRO_PLAY_X, CENTRO_PLAY_Y, R_INT))
                         iniciarJuego(&partida, &juego, mat);
 
+                    insertarArchivoRankingSinDup(&partida);
                     break;
                 }
+
+
             }
         }
 
