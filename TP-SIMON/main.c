@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
 
         if(juego.instancia == JUGANDO)
         {
-            partida.ranking.jugador = "juana";
+            strcpy(partida.ranking.jugador, "juanita");
             ///funcion: pedir nombre jugador y guardarlo en partida->ranking.jugador
             dibujar(&juego, mat);
             dibujarBordes(&juego);

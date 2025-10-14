@@ -169,19 +169,13 @@ bool insertarArchivoRankingSinDup(tPartida* partida)
     if(!pf)
         return false; //no se pudo abrir
 
-    fread(&rankArch, sizeof(tRanking), 1, pf);
-    while(!feof(pf) && strcmp(partida->ranking.jugador,rankArch.jugador))
-        fread(&rankArch, sizeof(tRanking), 1, pf);
+
+    while(fread(&rankArch, sizeof(tRanking), 1, pf) && strcmp(partida->ranking.jugador,rankArch.jugador));
 
     if(!strcmp(partida->ranking.jugador,rankArch.jugador))
-        fseek(pf, -1L, SEEK_CUR);
+        fseek(pf, -(long)sizeof(tRanking), SEEK_CUR);
 
-    else
-    {
-        fseek(pf, 0L, SEEK_END);
-        fwrite(&(partida->ranking), sizeof(tRanking), 1, pf);
-    }
-
+    fwrite(&(partida->ranking), sizeof(tRanking), 1, pf);
     fclose(pf);
 
     return true; //todo ok

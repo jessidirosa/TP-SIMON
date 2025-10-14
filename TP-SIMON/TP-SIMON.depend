@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1760405072 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\main.c
+1760411747 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\main.c
 	"dibujos.h"
 	"sdl.h"
 	"juego.h"
@@ -482,7 +482,7 @@
 	"dibujos.h"
 	"menus.h"
 
-1760404397 c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\juego.h
+1760411637 c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\juego.h
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
@@ -491,7 +491,7 @@
 	<time.h>
 	"sdl.h"
 
-1760404778 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\juego.c
+1760411292 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\juego.c
 	"sdl.h"
 	"juego.h"
 	"sonidos.h"

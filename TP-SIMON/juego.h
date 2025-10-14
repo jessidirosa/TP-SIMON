@@ -24,7 +24,7 @@
 
 typedef struct
 {
-    char* jugador;
+    char jugador[MAX_NOMBRE];
     int score;
 } tRanking;
 
@@ -63,5 +63,6 @@ float duracionNota(tPartida* partida);
 bool puntoEnRectangulo(int x, int y, int xRect, int yRect, int anchoRect, int altoRect);
 void configPorDefecto(tJuego* juego, tPartida* partida);
 bool crearArchivoRanking();
+bool mostrarArchivo(char* nombre);
 
 #endif // JUEGO_H_INCLUDED
