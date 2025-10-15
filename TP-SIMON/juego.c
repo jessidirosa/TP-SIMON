@@ -19,7 +19,10 @@ void inicializarPartida(tPartida* partida, tJuego* juego)
 {
     partida->sec = malloc(sizeof(int) * MAX);
     if(!partida->sec)
+    {
+        partida->sec = NULL;
         return;
+    }
 
     partida->psec = partida->sec + 1;
     partida->ranking.score = 0;
@@ -30,15 +33,14 @@ void inicializarPartida(tPartida* partida, tJuego* juego)
     if(partida->modoJuego == SCHONBERG)
         crearSecuenciaAleatoria(partida, juego);
 
-    if(partida->modoJuego = MOZART)
+    if(partida->modoJuego == MOZART)
     {
-        elegirMelodia(juego, )
-        crearSecuenciaPorArchivo(partida, juego, melodia);
+        elegirMelodia(juego, partida);
+        crearSecuenciaPorArchivo(partida, juego, partida->archivoMelodia);
     }
 
-
-//    if(partida->modoJuego == DESAFIO)
-//        cargarArchivoConIngresoJugador(partida, juego);
+    if(partida->modoJuego == DESAFIO)
+        crearSecuenciaPorArchivo(partida, juego, partida->archivoMelodia);
 
 }
 
@@ -62,11 +64,10 @@ void iniciarJuego(tPartida* partida, tJuego* juego, int** mat) //comienza la par
     dibujarBordes(juego);
     dibujarBotonCentro(juego, &volver, "Volver");
 
-    dibujarBotones(&totems, "TTT", juego, POS_VIDAS, 170, "assets/minedings/minedings.ttf", 14, colorTotem);
+    dibujarBotones(&totems, "TTT", juego, POS_VIDAS, 170, "fnt/minedings/minedings.ttf", 14, colorTotem);
     while(partida->estado != GAMEOVER && partida->estado != SALIR)
     {
-        //ver circularidad de secuencia para que sea continua hasta que el jugador pierda (resize de vector)
-        secuenciaJuego(partida, juego, mat); //mostrara la secuencia desde sec a psec a medida que avanza. el vector sec ya tendra en numeros la secuencia con el modo y los tonos definidos previamente en config
+        secuenciaJuego(partida, juego, mat);
         respuestausuario=respuesta(partida,juego,mat,&volver);
         if(respuestausuario== ERROR && vidas==0)
             partida->estado = GAMEOVER;
@@ -75,7 +76,7 @@ void iniciarJuego(tPartida* partida, tJuego* juego, int** mat) //comienza la par
 //            SDL_SetRenderDrawColor(juego->render, 0, 0, 0, 150);
 //            SDL_RenderPresent(juego->render);
             SDL_Delay(10);
-            dibujarBotones(&totems, "X", juego, POS_VIDAS + x, 170, "assets/porky_s/porkys_.ttf", 14, colorX);
+            dibujarBotones(&totems, "X", juego, POS_VIDAS + x, 170, "fnt/porky_s/porkys_.ttf", 14, colorX);
             x += 15;
         }
         else if(respuestausuario == SALIR)
@@ -215,7 +216,6 @@ bool mostrarArchivo(char* nombre)
     return true;
 }
 
-//llamada por funcion respuesta
 int botonSeleccionar(tJuego* juego)
 {
     double cx = ((MAT_COL-1)/2);
@@ -281,7 +281,9 @@ void liberarMemoria(tJuego* juego, int** mat, tPartida* partida, tRanking* ranki
         free(mat[i]);
     free(mat);
 
-    free(partida->sec);
+     if (partida->sec)
+        free(partida->sec);
+
     free(juego->tonosBotones);
     free(ranking);
 }
@@ -291,6 +293,7 @@ void configPorDefecto(tJuego* juego, tPartida* partida)
     partida->modoJuego = SCHONBERG;
     partida->tiempoNota = TIEMPO_INICIAL;
     juego->botones = 4;
+    juego->timbre = TIMBRE_SENO;
 }
 
 void* crearVector(size_t tam, int ce)
@@ -311,7 +314,6 @@ bool redimensionar(void** pv, int ce, size_t tam, int* cap)
     *pv = tmp;
     *cap = nuevaCap;
 
-    free(tmp);
     return true;
 }
 
@@ -380,31 +382,175 @@ int compararRankings(const void* r1, const void* r2)
     return (rank2->score - rank1->score);
 }
 
-bool crearSecuenciaPorArchivo(tPartida* partida, tJuego* juego, char* nombreArch) //modo mozart
+bool crearSecuenciaPorArchivo(tPartida* partida, tJuego* juego, char* nombreArch) // modo mozart / desafio
 {
-    int* fin = partida->sec + MAX; //despues resize
-    int* p = partida->sec;
+    int* fin = partida->sec + MAX;
+    int* p   = partida->sec;
     char buffer[MAX];
-    char* n = buffer;
+    char* n;
+    int boton;
+
     FILE* pf = fopen(nombreArch, "rt");
-    if(!pf)
-    {
+    if(!pf) {
         printf("no se pudo abrir archivo de melodia");
         return false;
     }
 
-    fgets(buffer, sizeof(buffer), pf);
+    if(!fgets(buffer, sizeof(buffer), pf)) {
+        fclose(pf);
+        return false;
+    }
+    fclose(pf);
+
+    n = buffer;
     while(p < fin)
     {
-        while(sscanf(n, "%d", p))
+        while((*n) && p < fin)
         {
-            n++;
-            p++;
-        }
+            if((*n) >= '0' && (*n) <= '9')
+            {
+                boton = (*n) - '0';
+                if(boton < juego->botones)
+                {
+                    (*p) = boton;
+                    p++;
+                }
+            }
 
+            n++;
+        }
         n = buffer;
     }
 
+    return true;
+}
+
+
+void elegirMelodia(tJuego* juego, tPartida* partida)
+{
+    switch (juego->botones) {
+    case 3:
+        strcpy(partida->archivoMelodia, ARCH_MELODIA_3);
+        break;
+    case 4:
+        strcpy(partida->archivoMelodia, ARCH_MELODIA_4);
+        break;
+    case 5:
+        strcpy(partida->archivoMelodia, ARCH_MELODIA_5);
+        break;
+    case 6:
+        strcpy(partida->archivoMelodia, ARCH_MELODIA_6);
+        break;
+    case 7:
+        strcpy(partida->archivoMelodia, ARCH_MELODIA_7);
+        break;
+    case 8:
+        strcpy(partida->archivoMelodia, ARCH_MELODIA_8);
+        break;
+    }
+}
+
+//desde el menu de config->modos
+void ingresarSecuenciaPorBotones(tJuego* juego, int** mat, tPartida* partida) //modo desafio
+{
+    tBotones grabar;
+    SDL_Event evento;
+
+    dibujar(juego, mat);
+    dibujarBordes(juego);
+    dibujarBotonCentro(juego, &grabar, "Grabar");
+
+    SDL_PollEvent(&evento);
+    if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, grabar.destino.x, grabar.destino.y, grabar.destino.w, grabar.destino.h))
+    {
+        juego->instancia = GRABANDO;
+    }
+}
+
+
+void grabarMelodia(tJuego* juego, int** mat, tPartida* partida)
+{
+    tBotones finalizar;
+    char nombre[] = "modo_desafio.txt";
+    int grabacion[MAX];
+    int ce = 0;
+    int* pg = grabacion;
+    SDL_Event ev;
+    bool grabando = true;
+
+    asignarSonidos(juego);
+    dibujar(juego, mat);
+    dibujarBordes(juego);
+    dibujarBotonCentro(juego, &finalizar, "Finalizar");
+
+    while (grabando)
+    {
+        if (!SDL_WaitEvent(&ev))
+            continue;
+
+        switch (ev.type)
+        {
+        case SDL_QUIT:
+            juego->instancia = SALIR;
+            return;
+
+        case SDL_MOUSEBUTTONDOWN:
+            if (puntoEnRectangulo(ev.button.x, ev.button.y, finalizar.destino.x, finalizar.destino.y, finalizar.destino.w, finalizar.destino.h))
+            {
+                if (ce > 0)
+                {
+                    cargarArchivoModoDesafio(nombre, grabacion, ce);
+                    strcpy(partida->archivoMelodia, nombre);
+                    juego->instancia = MENU;
+                }
+                else
+                    juego->instancia = MODO_DESAFIO; // nada grabado
+
+                grabando = false;
+                break;
+            }
+
+            if (puntoDentroCirculo(ev.button.x, ev.button.y, CENTRO_PLAY_X, CENTRO_PLAY_Y, R_EXT))
+            {
+                juego->mx = ev.button.x;
+                juego->my = ev.button.y;
+
+                int boton = botonSeleccionar(juego);
+                if (boton >= 0 && ce < MAX)
+                {
+                    iluminarBoton(boton, juego, mat);
+                    SDL_Delay(partida->tiempoNota);
+                    apagarBoton(boton, juego, mat);
+                    (*pg) = boton;
+                    pg++;
+                    ce++;
+                }
+            }
+            break;
+        }
+    }
+}
+
+
+bool cargarArchivoModoDesafio(char* nombre, int* grabacion, int ce)
+{
+    int* pg = grabacion;
+    int* fin = grabacion + ce;
+
+    FILE* pf = fopen(nombre, "wt");
+    if(!pf)
+    {
+        printf("no se pudo abrir modo desafio");
+        return false;
+    }
+
+    while(pg < fin)
+    {
+        fprintf(pf, "%d", (*pg));
+        pg++;
+    }
+
+    fprintf(pf, "\n");
     fclose(pf);
     return true;
 }

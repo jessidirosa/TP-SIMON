@@ -26,6 +26,14 @@
 
 #define CANT_VIDAS 3
 
+#define ARCH_MELODIA_3 "melodia3.txt"
+#define ARCH_MELODIA_4 "melodia4.txt"
+#define ARCH_MELODIA_5 "melodia5.txt"
+#define ARCH_MELODIA_6 "melodia6.txt"
+#define ARCH_MELODIA_7 "melodia7.txt"
+#define ARCH_MELODIA_8 "melodia8.txt"
+
+
 typedef struct
 {
     char jugador[MAX_NOMBRE];
@@ -41,6 +49,7 @@ typedef struct
     float tiempoNota;
     float acoteDuracion;
     int modoJuego;
+    char archivoMelodia[MAX_NOMBRE];
 
 } tPartida;
 
@@ -72,5 +81,9 @@ bool redimensionar(void** v, int ce, size_t tam, int* maxTam);
 int ordenarArchivo(char* nombre, tRanking** vRank, int* ce, int* maxTam, tJuego* juego);
 int compararRankings(const void* r1, const void* r2);
 bool crearSecuenciaPorArchivo(tPartida* partida, tJuego* juego, char* nombreArch); //modo mozart
+void elegirMelodia(tJuego* juego, tPartida* partida);
+void grabarMelodia(tJuego* juego, int** mat, tPartida* partida);
+void ingresarSecuenciaPorBotones(tJuego* juego, int** mat, tPartida* partida); //modo desafio
+bool cargarArchivoModoDesafio(char* nombre, int* grabacion, int ce);
 
 #endif // JUEGO_H_INCLUDED

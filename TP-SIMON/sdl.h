@@ -22,7 +22,17 @@
 #define DURACION_INICIAL 7
 #define RANKING 8
 #define RANK_ORDENADO 9
+#define MODO_DESAFIO 10
+#define BOTONES_DESAFIO 11
+#define GRABANDO 12
 
+typedef enum
+{
+    TIMBRE_SENO = 0,
+    TIMBRE_CUADRADA,
+    TIMBRE_SIERRA,
+    TIMBRE_TRIANG
+} eTimbre;
 
 typedef struct
 {
@@ -31,7 +41,8 @@ typedef struct
     SDL_Surface* surface;
     SDL_Texture* fondo;
     unsigned botones; //3 a 8
-    int* tonosBotones;
+    eTimbre timbre;
+    float* tonosBotones;
     int mx; //coordenada x del mouse
     int my; //coordenada y del mouse
     int instancia;

@@ -1,3 +1,16 @@
+//Apellido: Di Rosa, Jessica Melanie
+//DNI: 43722576
+//Entrega: Sí
+//
+//Apellido: Arriola, Santiago
+//DNI: 12345678
+//Entrega: Sí
+//
+//Apellido: Freda, Luca
+//DNI: -
+//Entrega: No
+
+
 #include "dibujos.h"
 #include "sdl.h"
 #include "juego.h"
@@ -17,11 +30,12 @@ int main(int argc, char* argv[])
     if(!vecRanking)
         return ERROR;
 
+    partida.sec = NULL;
     int **mat = crearMatriz(MAT_FILA, MAT_COL, sizeof(int));
     if(!mat)
         return ERROR;
 
-    juego.tonosBotones = (int*)crearVector(sizeof(int), MAX_BOTON);
+    juego.tonosBotones = (float*)crearVector(sizeof(int), MAX_BOTON);
     if(!juego.tonosBotones)
         return ERROR;
 
@@ -57,12 +71,20 @@ int main(int argc, char* argv[])
         if(juego.instancia == DURACION_INICIAL)
             menuDuracionInicial(&juego, &partida);
 
+        if(juego.instancia == BOTONES_DESAFIO)
+            menuCantBotonesDesafio(&juego, &partida);
+
+        if(juego.instancia == MODO_DESAFIO)
+            ingresarSecuenciaPorBotones(&juego, mat, &partida);
+
+        if(juego.instancia == GRABANDO)
+            grabarMelodia(&juego, mat, &partida);
+
         if(juego.instancia == JUGANDO)
         {
             dibujar(&juego, mat);
             dibujarBordes(&juego);
             dibujarBotonCentro(&juego, &iniciar, "Iniciar");
-            //presenta lo hecho en el render
             SDL_RenderPresent(juego.render);
 
             while(SDL_PollEvent(&evento))

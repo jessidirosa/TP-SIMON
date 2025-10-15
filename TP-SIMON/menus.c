@@ -109,14 +109,14 @@ void menuModos(tJuego* juego, tPartida* partida)
     }
     if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, modoMozart.destino.x, modoMozart.destino.y, modoMozart.destino.w, modoMozart.destino.h))
     {
-        partida->modoJuego = MOZART; //de momento no existe
+        partida->modoJuego = MOZART;
         juego->instancia = CONFIG;
     }
 
     if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, modoDesafio.destino.x, modoDesafio.destino.y, modoDesafio.destino.w, modoDesafio.destino.h))
     {
-        partida->modoJuego = DESAFIO; //de momento no existe
-        juego->instancia = CONFIG;
+        partida->modoJuego = DESAFIO;
+        juego->instancia = BOTONES_DESAFIO;
     }
 
     if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, atras.destino.x, atras.destino.y, atras.destino.w, atras.destino.h))
@@ -173,6 +173,59 @@ void menuCantBotones(tJuego* juego, tPartida* partida)
         juego->instancia = CONFIG;
 
 }
+
+void menuCantBotonesDesafio(tJuego* juego, tPartida* partida)
+{
+    tBotones b3, b4, b5, b6, b7, b8;
+    tBotones atras;
+    SDL_Event evento;
+
+    SDL_RenderClear(juego->render);
+    SDL_RenderCopy(juego->render, juego->fondo, NULL, NULL);
+    dibujarMenuBotones(juego, &b3, &b4, &b5, &b6, &b7, &b8, &atras);
+    SDL_PollEvent(&evento);
+    if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, b3.destino.x, b3.destino.y, b3.destino.w, b3.destino.h))
+    {
+        juego->botones = 3;
+        juego->instancia = MODO_DESAFIO;
+    }
+
+    if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, b4.destino.x, b4.destino.y, b4.destino.w, b4.destino.h))
+    {
+        juego->botones = 4;
+        juego->instancia = MODO_DESAFIO;
+    }
+
+    if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, b5.destino.x, b5.destino.y, b5.destino.w, b5.destino.h))
+    {
+        juego->botones = 5;
+        juego->instancia = MODO_DESAFIO;
+    }
+
+    if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, b6.destino.x, b6.destino.y, b6.destino.w, b6.destino.h))
+    {
+        juego->botones = 6;
+        juego->instancia = MODO_DESAFIO;
+    }
+
+    if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, b7.destino.x, b7.destino.y, b7.destino.w, b7.destino.h))
+    {
+        juego->botones = 7;
+        juego->instancia = MODO_DESAFIO;
+    }
+
+    if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, b8.destino.x, b8.destino.y, b8.destino.w, b8.destino.h))
+    {
+        juego->botones = 8;
+        juego->instancia = MODO_DESAFIO;
+    }
+
+    if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, atras.destino.x, atras.destino.y, atras.destino.w, atras.destino.h))
+        juego->instancia = CONFIG;
+
+
+}
+
 
 void pedirNombreJugador(tJuego* juego, TTF_Font* fuente, char* destino, int maxLen)
 {
@@ -301,18 +354,18 @@ bool mostrarRanking(tJuego* juego, tPartida* partida, char* nombreArch, tRanking
     (*ce) = 0;
     SDL_RenderClear(juego->render);
     SDL_RenderCopy(juego->render, juego->fondo, NULL, NULL);
-    dibujarTextos("Estadisticas: TOP 5", juego, 15, 40, "assets/aero_2/Aero.ttf", 18, color);
-    dibujarBotones(&atras, "Atras", juego, 35, 160, "assets/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf", 16, color);
+    dibujarTextos("Estadisticas: TOP 5", juego, 15, 40, "fnt/aero_2/Aero.ttf", 18, color);
+    dibujarBotones(&atras, "Atras", juego, 35, 160, "fnt/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf", 16, color);
 
     if(ordenarArchivo(nombreArch, &vecRanking, ce, maxTam, juego) == VACIO)
-        dibujarTextos("No hay datos aun", juego, 25,  70, "assets/aero_2/Aero.ttf", 12, color);
+        dibujarTextos("No hay datos aun", juego, 25,  70, "fnt/aero_2/Aero.ttf", 12, color);
 
     limite = ((*ce) < TOP) ? (*ce) : TOP;
     for (i = 0; i < limite; ++i)
     {
         snprintf(bufPuntaje, sizeof(bufPuntaje), "%d", vecRanking->score);
-        dibujarTextos(vecRanking->jugador, juego, 50,  y, "assets/aero_2/Aero.ttf", 12, color);
-        dibujarTextos(bufPuntaje, juego, 130, y, "assets/aero_2/Aero.ttf", 12, color);
+        dibujarTextos(vecRanking->jugador, juego, 50,  y, "fnt/aero_2/Aero.ttf", 12, color);
+        dibujarTextos(bufPuntaje, juego, 130, y, "fnt/aero_2/Aero.ttf", 12, color);
 
         y += 14;
         vecRanking++;

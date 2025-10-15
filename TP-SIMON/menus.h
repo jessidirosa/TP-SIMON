@@ -25,5 +25,6 @@ void menuDuracionInicial(tJuego* juego, tPartida* partida);
 void pedirNombreJugador(tJuego* juego, TTF_Font* fuente, char* destino, int maxLen);
 bool mostrarRanking(tJuego* juego, tPartida* partida, char* nombreArch, tRanking* vecRanking, int* ce, int* max);
 void menuDuracionInicial(tJuego* juego, tPartida* partida);
+void menuCantBotonesDesafio(tJuego* juego, tPartida* partida);
 
 #endif // MENUS_H_INCLUDED

@@ -13,4 +13,11 @@ void destruirTono(Mix_Chunk *tono);
 void asignarSonidos(tJuego* juego);
 void reproducirNota(int boton, tJuego* juego);
 
+Mix_Chunk* crearTonoSeno(float frecuencia);
+Mix_Chunk* crearTonoCuadrada(float frecuencia);
+Mix_Chunk* crearTonoSierra(float frecuencia);
+Mix_Chunk* crearTonoTriang(float frecuencia);
+Mix_Chunk* crearTonoPorTimbre(float frecuencia, eTimbre timbre);
+
+
 #endif // SONIDOS_H_INCLUDED
