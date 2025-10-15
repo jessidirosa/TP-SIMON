@@ -166,7 +166,6 @@ void crearSecuenciaAleatoria(tPartida* partida, tJuego* juego) //modo schonberg
     }
 }
 
-//hacer funcion de ordenarArchivo
 bool insertarArchivoRankingSinDup(tPartida* partida)
 {
     tRanking rankArch;
@@ -227,7 +226,11 @@ int botonSeleccionar(tJuego* juego)
 
     tBoton* centro = malloc(sizeof(tBoton) * juego->botones);
     if(!centro)
+    {
+        free(centro);
         return ERROR; //ver
+    }
+
 
     double dist = sqrt((cx - juego->mx) * (cx - juego->mx) + (cy - juego->my) * (cy - juego->my));
     if(dist < R_INT || dist > R_EXT)
@@ -258,8 +261,9 @@ int botonSeleccionar(tJuego* juego)
         boton++;
     }
 
+    int num = menor->num;
     free(centro);
-    return menor->num;
+    return num;
 }
 
 bool esMenor(double actual, double nuevo)
@@ -307,9 +311,9 @@ bool redimensionar(void** pv, int ce, size_t tam, int* cap)
     return true;
 }
 
-int ordenarArchivo(char* nombre, tRanking* vRank, int* ce, int* maxTam)
+int ordenarArchivo(char* nombre, tRanking** vRank, int* ce, int* maxTam)
 {
-    tRanking* r = vRank;
+    tRanking* r = *vRank;
     tRanking* fin;
     FILE* pf;
 
@@ -323,9 +327,9 @@ int ordenarArchivo(char* nombre, tRanking* vRank, int* ce, int* maxTam)
 
     while(!feof(pf))
     {
-        while((*ce) < (*maxTam) && fread(vRank, sizeof(tRanking), 1, pf))
+        while((*ce) < (*maxTam) && fread(*vRank, sizeof(tRanking), 1, pf))
         {
-            vRank++;
+            (*vRank)++;
             (*ce)++;
         }
 
@@ -333,14 +337,15 @@ int ordenarArchivo(char* nombre, tRanking* vRank, int* ce, int* maxTam)
         {
             if(!redimensionar((void**)&r, (*ce), sizeof(tRanking), maxTam))
                 return false; //no pudo agrandarse el vector
-            vRank = r;
+            (*vRank) = r + (*ce);
         }
     }
 
-    qsort(r, (*ce), tam, compararRankings);
     fclose(pf);
 
-    if((*ce) == 0)
+    if((*ce) > 0)
+        qsort(r, (*ce), sizeof(tRanking), compararRankings);
+    else if((*ce) == 0)
         return VACIO;
 
     pf = fopen(nombre, "wb");

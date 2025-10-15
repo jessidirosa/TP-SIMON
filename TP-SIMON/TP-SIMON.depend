@@ -482,7 +482,7 @@
 	"dibujos.h"
 	"menus.h"
 
-1760495222 c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\juego.h
+1760511087 c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\juego.h
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
@@ -491,7 +491,7 @@
 	<time.h>
 	"sdl.h"
 
-1760497734 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\juego.c
+1760512764 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\juego.c
 	"sdl.h"
 	"juego.h"
 	"sonidos.h"
@@ -528,7 +528,7 @@
 1760488271 c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\menus.h
 	"sdl.h"
 
-1760495296 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\menus.c
+1760511159 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\menus.c
 	"sdl.h"
 	"juego.h"
 	"sonidos.h"

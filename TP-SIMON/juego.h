@@ -69,7 +69,7 @@ void configPorDefecto(tJuego* juego, tPartida* partida);
 bool mostrarArchivo(char* nombre);
 void* crearVector(size_t tam, int ce);
 bool redimensionar(void** v, int ce, size_t tam, int* maxTam);
-int ordenarArchivo(char* nombre, tRanking* vRank, int* ce, int* maxTam);
+int ordenarArchivo(char* nombre, tRanking** vRank, int* ce, int* maxTam);
 int compararRankings(const void* r1, const void* r2);
 
 #endif // JUEGO_H_INCLUDED

@@ -309,7 +309,7 @@ bool mostrarRanking(tJuego* juego, tPartida* partida, char* nombreArch, tRanking
     dibujarTextos("Estadisticas: TOP 5", juego, 15, 40, "assets/aero_2/Aero.ttf", 18, color);
     dibujarBotones(&atras, "Atras", juego, 35, 140, "assets/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf", 16, color);
 
-    if(ordenarArchivo(nombreArch, vecRanking, ce, sizeof(tRanking), maxTam) == VACIO)
+    if(ordenarArchivo(nombreArch, &vecRanking, ce, maxTam) == VACIO)
         dibujarTextos("No hay datos aun", juego, 15,  70, "assets/aero_2/Aero.ttf", 12, color);
 
     for (i = 0; i < limite; ++i)
