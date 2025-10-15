@@ -30,7 +30,34 @@ void menuInicial(tJuego* juego, tPartida* partida) ///faltaria agregar el tema d
 
     if(evento.type == SDL_QUIT || (evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, salir.destino.x, salir.destino.y, salir.destino.w, salir.destino.h)))
         juego->instancia = SALIR;
+
+
+    if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, jugar.destino.x, jugar.destino.y, jugar.destino.w, jugar.destino.h))
+        {
+            SDL_SetRenderDrawBlendMode(juego->render, SDL_BLENDMODE_BLEND);
+            SDL_SetRenderDrawColor(juego->render, 0, 0, 0, 180); // negro con transparencia
+            SDL_Rect overlay = {0,0, ANCHO_VENTANA, ALTO_VENTANA};
+            SDL_RenderFillRect(juego->render, &overlay);
+            SDL_RenderPresent(juego->render);
+
+
+            TTF_Font* fuente = TTF_OpenFont("C:\\Windows\\Fonts\\arial.ttf",20);
+            if (!fuente)
+            {
+                printf("Error al cargar fuente: %s\n", TTF_GetError());
+            }
+            else
+            {
+
+                pedirNombreJugador(juego, fuente, partida->ranking.jugador, sizeof(partida->ranking.jugador));
+                TTF_CloseFont(fuente);
+            }
+
+            juego->instancia = JUGANDO;
+        }
+
 }
+
 
 void menuConfig(tJuego* juego, tPartida* partida)
 {
@@ -151,6 +178,160 @@ void menuCantBotones(tJuego* juego, tPartida* partida)
     if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, atras.destino.x, atras.destino.y, atras.destino.w, atras.destino.h))
         juego->instancia = CONFIG;
 
+}
+
+void pedirNombreJugador(tJuego* juego, TTF_Font* fuente, char* destino, int maxLen)
+{
+    SDL_Event evento;
+    SDL_StartTextInput();
+    destino[0] = '\0';
+    SDL_Color blanco = {255,255,255,255};
+
+    int escribiendo = 1;
+    Uint32 ultimoBlink = SDL_GetTicks();
+    int mostrarCursor = 1;
+
+    while (escribiendo)
+    {
+        // cursor parpadeante cada 500 ms
+        if (SDL_GetTicks() - ultimoBlink > 500) {
+            mostrarCursor = !mostrarCursor;
+            ultimoBlink = SDL_GetTicks();
+        }
+
+        while (SDL_PollEvent(&evento))
+        {
+            // DEBUG: imprime eventos para que veas si llegan
+            // printf("Evento: %d\n", evento.type);
+
+            if (evento.type == SDL_QUIT) {
+                escribiendo = 0;
+                break;
+            }
+
+            if (evento.type == SDL_WINDOWEVENT) {
+                if (evento.window.event == SDL_WINDOWEVENT_FOCUS_GAINED)
+                    printf("Ventana: foco ganado\n");
+                if (evento.window.event == SDL_WINDOWEVENT_FOCUS_LOST)
+                    printf("Ventana: foco perdido\n");
+            }
+
+            if (evento.type == SDL_KEYDOWN)
+            {
+                if (evento.key.keysym.sym == SDLK_RETURN) {
+                    escribiendo = 0;
+                    break;
+                }
+                if (evento.key.keysym.sym == SDLK_ESCAPE) {
+                    destino[0] = '\0';
+                    escribiendo = 0;
+                    break;
+                }
+                if (evento.key.keysym.sym == SDLK_BACKSPACE && strlen(destino) > 0)
+                    destino[strlen(destino) - 1] = '\0';
+            }
+
+            if (evento.type == SDL_TEXTINPUT)
+            {
+                // DEBUG: ves en consola lo que SDL entrega
+                // printf("SDL_TEXTINPUT: '%s'\n", evento.text.text);
+
+                if ((int)strlen(destino) + (int)strlen(evento.text.text) < maxLen) {
+                    strcat(destino, evento.text.text);
+                }
+            }
+        }
+
+        // ---------- DIBUJADO ----------
+        // Limpio pantalla (si querés overlay en lugar de limpiar toda la pantalla,
+        // comentar RenderClear y usar SDL_RenderFillRect con blendmode)
+        SDL_SetRenderDrawColor(juego->render, 0, 0, 0, 255);
+        SDL_RenderClear(juego->render);
+        SDL_RenderCopy(juego->render, juego->fondo, NULL, NULL);
+        //SDL_RenderFillRect(juego->render, &overlay);
+
+        // Prompt
+        SDL_Surface* sPrompt = TTF_RenderText_Solid(fuente, "Ingrese su nombre:", blanco);
+        if (sPrompt) {
+            SDL_Texture* tPrompt = SDL_CreateTextureFromSurface(juego->render, sPrompt);
+            SDL_Rect rPrompt = {10,75, sPrompt->w, sPrompt->h};
+            SDL_RenderCopy(juego->render, tPrompt, NULL, &rPrompt);
+            SDL_DestroyTexture(tPrompt);
+            SDL_FreeSurface(sPrompt);
+        } else {
+            printf("Error render prompt: %s\n", TTF_GetError());
+        }
+
+        // Texto usuario (o cursor si vacío)
+        char buf[256];
+        if (strlen(destino) == 0) {
+            // mostrar cursor si no escribió nada
+            if (mostrarCursor)
+                snprintf(buf, sizeof(buf), "_");
+            else
+                snprintf(buf, sizeof(buf), " ");
+        } else {
+            if (mostrarCursor)
+                snprintf(buf, sizeof(buf), "%s_", destino);
+            else
+                snprintf(buf, sizeof(buf), "%s", destino);
+        }
+
+        SDL_Surface* sText = TTF_RenderText_Solid(fuente, buf, blanco);
+        if (sText) {
+            SDL_Texture* tText = SDL_CreateTextureFromSurface(juego->render, sText);
+            SDL_Rect rText = {10,110, sText->w, sText->h};
+            SDL_RenderCopy(juego->render, tText, NULL, &rText);
+            SDL_DestroyTexture(tText);
+            SDL_FreeSurface(sText);
+        }
+        SDL_RenderPresent(juego->render);
+
+        // pequeña espera para no saturar CPU
+        SDL_Delay(10);
+    }
+
+    SDL_StopTextInput();
+}
+
+bool mostrarRanking(tJuego* juego, tPartida* partida, char* nombreArch, tRanking* vecRanking, int* ce, int* maxTam)
+{
+    int y = 50;
+    int i;
+    tBotones atras;
+    SDL_Color color = {255,255,255,255};
+    SDL_Event evento;
+    char bufPuntaje[5];
+    int limite = (*ce < TOP) ? *ce : TOP;
+
+    SDL_RenderClear(juego->render);
+    SDL_RenderCopy(juego->render, juego->fondo, NULL, NULL);
+    dibujarTextos("Estadisticas: TOP 5", juego, 15, 40, "assets/aero_2/Aero.ttf", 18, color);
+    dibujarBotones(&atras, "Atras", juego, 35, 140, "assets/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf", 16, color);
+
+    if(ordenarArchivo(nombreArch, vecRanking, ce, sizeof(tRanking), maxTam) == VACIO)
+        dibujarTextos("No hay datos aun", juego, 15,  70, "assets/aero_2/Aero.ttf", 12, color);
+
+    for (i = 0; i < limite; ++i)
+    {
+        snprintf(bufPuntaje, sizeof(bufPuntaje), "%d", vecRanking->score);
+        dibujarTextos(vecRanking->jugador, juego, 30,  y, "assets/aero_2/Aero.ttf", 14, color);
+        dibujarTextos(bufPuntaje, juego, 130, y, "assets/aero_2/Aero.ttf", 14, color);
+
+        y += 22;
+        vecRanking++;
+    }
+
+    SDL_DestroyTexture(atras.textura);
+    TTF_CloseFont(atras.fuente);
+
+    SDL_RenderPresent(juego->render);
+
+    SDL_PollEvent(&evento);
+    if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, atras.destino.x, atras.destino.y, atras.destino.w, atras.destino.h))
+        juego->instancia = MENU;
+
+    return true;
 }
 
 //void menuDuracionInicial(tJuego* juego, tPartida* partida)

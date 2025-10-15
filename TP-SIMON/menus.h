@@ -12,13 +12,14 @@
 
 #define MIN_DURACION 2000
 
+#define TOP 5
 
 void menuInicial(tJuego* juego, tPartida* partida);
 void menuConfig(tJuego* juego, tPartida* partida);
 void menuModos(tJuego* juego, tPartida* partida);
 void menuCantBotones(tJuego* juego, tPartida* partida);
 void menuDuracionInicial(tJuego* juego, tPartida* partida);
-
-
+void pedirNombreJugador(tJuego* juego, TTF_Font* fuente, char* destino, int maxLen);
+bool mostrarRanking(tJuego* juego, tPartida* partida, char* nombreArch, tRanking* vecRanking, int* ce, int* max);
 
 #endif // MENUS_H_INCLUDED

@@ -45,35 +45,41 @@ float duracionNota(tPartida* partida)
     return partida->tiempoNota * (1 - partida->acoteDuracion);
 }
 
-bool crearArchivoRanking()
-{
-    FILE* pf = fopen("Rankings.bin", "wb");
-    if(!pf)
-    {
-        printf("error creando archivo rankings");
-        return false;
-    }
-
-    fclose(pf);
-    return true;
-}
-
 void iniciarJuego(tPartida* partida, tJuego* juego, int** mat) //comienza la partida
 {
+    int x = 1;
+    SDL_Color colorX = {255, 0, 0, 200};
+    SDL_Color colorTotem = {255, 255, 0, 255};
     tBotones volver;
+    tBotones totems;
     int vidas = CANT_VIDAS;
+    int respuestausuario;
+
     inicializarPartida(partida, juego);
     dibujar(juego, mat);
     dibujarBordes(juego);
     dibujarBotonCentro(juego, &volver, "Volver");
 
+    dibujarBotones(&totems, "TTT", juego, POS_VIDAS, 170, "assets/minedings/minedings.ttf", 14, colorTotem);
     while(partida->estado != GAMEOVER)
     {
         //ver circularidad de secuencia para que sea continua hasta que el jugador pierda (resize de vector)
         secuenciaJuego(partida, juego, mat); //mostrara la secuencia desde sec a psec a medida que avanza. el vector sec ya tendra en numeros la secuencia con el modo y los tonos definidos previamente en config
-
-        if(respuesta(partida, juego, mat, &volver) == ERROR)
+        respuestausuario=respuesta(partida,juego,mat,&volver);
+        if(respuestausuario== ERROR && vidas==0)
             partida->estado = GAMEOVER;
+        else if(respuestausuario == ERROR && vidas>0) {
+            vidas-=1;
+//            SDL_SetRenderDrawColor(juego->render, 0, 0, 0, 150);
+//            SDL_RenderPresent(juego->render);
+            SDL_Delay(10);
+
+            dibujarBotones(&totems, "X", juego, POS_VIDAS + x, 170, "assets/porky_s/porkys_.ttf", 14, colorX);
+            x += 15;
+        }
+
+        else if(respuestausuario == SALIR)
+            partida->estado = GAMEOVER; //no sale del todo
         else
         {
             partida->ranking.score++;
@@ -82,11 +88,11 @@ void iniciarJuego(tPartida* partida, tJuego* juego, int** mat) //comienza la par
         }
     }
 
-    ///funcion: cargar en archivo de rankings el tRanking
+    insertarArchivoRankingSinDup(partida);
     ///funcion: ordenar archivo ranking
 
     //poner de reiniciarlo o algo
-    juego->instancia = MENU; ///instancia RANKING: muestra ranking y boton reiniciar
+    juego->instancia = RANKING; ///instancia RANKING: muestra ranking y boton reiniciar
 }
 
 int respuesta(tPartida* partida, tJuego* juego, int** mat, tBotones* volver)
@@ -99,7 +105,7 @@ int respuesta(tPartida* partida, tJuego* juego, int** mat, tBotones* volver)
         SDL_WaitEvent(&evento);
 
         if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, volver->destino.x, volver->destino.y, volver->destino.w, volver->destino.h))
-            return ERROR;
+            return SALIR;
 
         if (evento.type == SDL_MOUSEBUTTONDOWN && puntoDentroCirculo(evento.button.x, evento.button.y, CENTRO_PLAY_X, CENTRO_PLAY_Y, R_EXT))
         {
@@ -127,7 +133,7 @@ int respuesta(tPartida* partida, tJuego* juego, int** mat, tBotones* volver)
             }
         }
         else if (evento.type == SDL_QUIT)
-            return ERROR;
+            return SALIR;
     }
 
     return CONTINUA;
@@ -163,17 +169,24 @@ void crearSecuenciaAleatoria(tPartida* partida, tJuego* juego) //modo schonberg
 //hacer funcion de ordenarArchivo
 bool insertarArchivoRankingSinDup(tPartida* partida)
 {
-    FILE* pf = fopen("Rankings.bin", "r+b");
     tRanking rankArch;
-
+    int encontrado = 0;
+    FILE* pf = fopen("Rankings.bin", "r+b");
     if(!pf)
-        return false; //no se pudo abrir
+    {
+        pf = fopen("Rankings.bin", "w+b");   //crea si no existe
+        if(!pf)
+            return false;
+    }
 
-
-    while(fread(&rankArch, sizeof(tRanking), 1, pf) && strcmp(partida->ranking.jugador,rankArch.jugador));
-
-    if(!strcmp(partida->ranking.jugador,rankArch.jugador))
-        fseek(pf, -(long)sizeof(tRanking), SEEK_CUR);
+    while(!encontrado && fread(&rankArch, sizeof(tRanking), 1, pf))
+    {
+        if(!strncmp(partida->ranking.jugador, rankArch.jugador, sizeof(rankArch.jugador)))
+        {
+            fseek(pf, -(long)sizeof(tRanking), SEEK_CUR);
+            encontrado = 1;
+        }
+    }
 
     fwrite(&(partida->ranking), sizeof(tRanking), 1, pf);
     fclose(pf);
@@ -199,8 +212,6 @@ bool mostrarArchivo(char* nombre)
     fclose(pf);
     return true;
 }
-
-
 
 //llamada por funcion respuesta
 int botonSeleccionar(tJuego* juego)
@@ -247,6 +258,7 @@ int botonSeleccionar(tJuego* juego)
         boton++;
     }
 
+    free(centro);
     return menor->num;
 }
 
@@ -255,19 +267,16 @@ bool esMenor(double actual, double nuevo)
     return (nuevo - actual) > 0 ? false : true;
 }
 
-void liberarMemoria(tJuego* juego, int** mat, tPartida* partida)
+void liberarMemoria(tJuego* juego, int** mat, tPartida* partida, tRanking* ranking)
 {
     int i;
+    for (i = 0; i < MAT_FILA; i++)
+        free(mat[i]);
+    free(mat);
 
     free(partida->sec);
-    for(i=MAT_FILA-1; i>=0; i--)
-    {
-        free((*mat));
-        (*mat)++;
-    }
-
-    free(mat);
     free(juego->tonosBotones);
+    free(ranking);
 }
 
 void configPorDefecto(tJuego* juego, tPartida* partida)
@@ -275,4 +284,84 @@ void configPorDefecto(tJuego* juego, tPartida* partida)
     partida->modoJuego = SCHONBERG;
     partida->tiempoNota = TIEMPO_INICIAL;
     juego->botones = 4;
+}
+
+void* crearVector(size_t tam, int ce)
+{
+    void* vec = calloc(ce, tam);
+    if(!vec)
+        return NULL;
+    return vec;
+}
+
+bool redimensionar(void** pv, int ce, size_t tam, int* cap)
+{
+    int nuevaCap = (*cap > 0) ? (*cap * 2) : 1;
+    void* tmp = realloc(*pv, (size_t)nuevaCap * tam);
+    if (!tmp)
+        return false;
+
+    *pv = tmp;
+    *cap = nuevaCap;
+
+    return true;
+}
+
+int ordenarArchivo(char* nombre, tRanking* vRank, int* ce, int* maxTam)
+{
+    tRanking* r = vRank;
+    tRanking* fin;
+    FILE* pf;
+
+    pf = fopen(nombre, "rb");
+    if(!pf)
+    {
+        pf = fopen("Rankings.bin", "w+b");   //crea si no existe
+        if(!pf)
+            return false;
+    }
+
+    while(!feof(pf))
+    {
+        while((*ce) < (*maxTam) && fread(vRank, sizeof(tRanking), 1, pf))
+        {
+            vRank++;
+            (*ce)++;
+        }
+
+        if((*ce) == (*maxTam))
+        {
+            if(!redimensionar((void**)&r, (*ce), sizeof(tRanking), maxTam))
+                return false; //no pudo agrandarse el vector
+            vRank = r;
+        }
+    }
+
+    qsort(r, (*ce), tam, compararRankings);
+    fclose(pf);
+
+    if((*ce) == 0)
+        return VACIO;
+
+    pf = fopen(nombre, "wb");
+    if(!pf)
+        return false;
+
+    fin = r + (*ce);
+    while(r < fin)
+    {
+        fwrite(r, sizeof(tRanking), 1, pf);
+        r++;
+    }
+
+    fclose(pf);
+    return true;
+}
+
+int compararRankings(const void* r1, const void* r2)
+{
+    tRanking* rank1 = (tRanking*)r1;
+    tRanking* rank2 = (tRanking*)r2;
+
+    return (rank2->score - rank1->score);
 }

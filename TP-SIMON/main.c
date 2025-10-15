@@ -11,17 +11,19 @@ int main(int argc, char* argv[])
     bool corriendo = true;
     tPartida partida;
     tBotones iniciar;
+    int maxTam = MAX_RANK;
+    int ce = 0;
+    tRanking* vecRanking = (tRanking*)crearVector(sizeof(tRanking), maxTam);
+    if(!vecRanking)
+        return ERROR;
 
     int **mat = crearMatriz(MAT_FILA, MAT_COL, sizeof(int));
     if(!mat)
         return ERROR;
 
-    juego.tonosBotones = malloc(sizeof(int) * MAX_BOTON);
+    juego.tonosBotones = (int*)crearVector(sizeof(int), MAX_BOTON);
     if(!juego.tonosBotones)
         return ERROR;
-
-//    if(!crearArchivoRanking())
-//        return ERROR;
 
     if(!sdl_inicializar(&juego))
     {
@@ -49,16 +51,14 @@ int main(int argc, char* argv[])
         if(juego.instancia == BOTONES)
             menuCantBotones(&juego, &partida);
 
-//        if(juego.instancia == RANKING)
-//            mostrarRanking(&juego, &partida);
+        if(juego.instancia == RANKING)
+            mostrarRanking(&juego, &partida, "Rankings.bin", vecRanking, &ce, &maxTam);
 
 //        if(juego.instancia == DURACION_INICIAL)
 //            menuDuracionInicial(&juego, &partida);
 
         if(juego.instancia == JUGANDO)
         {
-            strcpy(partida.ranking.jugador, "juanita");
-            ///funcion: pedir nombre jugador y guardarlo en partida->ranking.jugador
             dibujar(&juego, mat);
             dibujarBordes(&juego);
             dibujarBotonCentro(&juego, &iniciar, "Iniciar");
@@ -89,20 +89,14 @@ int main(int argc, char* argv[])
                     //toca Play (x,y)
                     if(puntoDentroCirculo(evento.button.x, evento.button.y, CENTRO_PLAY_X, CENTRO_PLAY_Y, R_INT))
                         iniciarJuego(&partida, &juego, mat);
-
-                    insertarArchivoRankingSinDup(&partida);
                     break;
                 }
-
-
             }
         }
-
-
     }
 
     sdl_limpiar(&juego);
-    liberarMemoria(&juego, mat, &partida);
+    liberarMemoria(&juego, mat, &partida, vecRanking);
 
     return 0;
 }
