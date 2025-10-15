@@ -320,24 +320,24 @@ int ordenarArchivo(char* nombre, tRanking** vRank, int* ce, int* maxTam)
     pf = fopen(nombre, "rb");
     if(!pf)
     {
-        pf = fopen("Rankings.bin", "w+b");   //crea si no existe
+        pf = fopen(nombre, "w+b");   //crea si no existe
         if(!pf)
             return false;
     }
 
     while(!feof(pf))
     {
-        while((*ce) < (*maxTam) && fread(*vRank, sizeof(tRanking), 1, pf))
+        while((*ce) < (*maxTam) && fread(r, sizeof(tRanking), 1, pf))
         {
-            (*vRank)++;
+            r++;
             (*ce)++;
         }
 
         if((*ce) == (*maxTam))
         {
-            if(!redimensionar((void**)&r, (*ce), sizeof(tRanking), maxTam))
+            if(!redimensionar((void**)vRank, (*ce), sizeof(tRanking), maxTam))
                 return false; //no pudo agrandarse el vector
-            (*vRank) = r + (*ce);
+            r = (*vRank) + (*ce);
         }
     }
 
@@ -352,6 +352,7 @@ int ordenarArchivo(char* nombre, tRanking** vRank, int* ce, int* maxTam)
     if(!pf)
         return false;
 
+    r = (*vRank);
     fin = r + (*ce);
     while(r < fin)
     {

@@ -491,7 +491,7 @@
 	<time.h>
 	"sdl.h"
 
-1760512764 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\juego.c
+1760537820 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\juego.c
 	"sdl.h"
 	"juego.h"
 	"sonidos.h"
@@ -528,7 +528,7 @@
 1760488271 c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\menus.h
 	"sdl.h"
 
-1760511159 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\menus.c
+1760538588 source:c:\users\jessica\documents\unlam\2c2025\topicos de programacion\tp-simon\tp-simon\menus.c
 	"sdl.h"
 	"juego.h"
 	"sonidos.h"

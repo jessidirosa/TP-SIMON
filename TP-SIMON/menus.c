@@ -287,7 +287,7 @@ void pedirNombreJugador(tJuego* juego, TTF_Font* fuente, char* destino, int maxL
         }
         SDL_RenderPresent(juego->render);
 
-        // pequeña espera para no saturar CPU
+        //pequeña espera para no saturar CPU
         SDL_Delay(10);
     }
 
@@ -296,27 +296,28 @@ void pedirNombreJugador(tJuego* juego, TTF_Font* fuente, char* destino, int maxL
 
 bool mostrarRanking(tJuego* juego, tPartida* partida, char* nombreArch, tRanking* vecRanking, int* ce, int* maxTam)
 {
-    int y = 50;
+    int y = 60;
     int i;
     tBotones atras;
     SDL_Color color = {255,255,255,255};
     SDL_Event evento;
     char bufPuntaje[5];
-    int limite = (*ce < TOP) ? *ce : TOP;
+    int limite;
 
     SDL_RenderClear(juego->render);
     SDL_RenderCopy(juego->render, juego->fondo, NULL, NULL);
     dibujarTextos("Estadisticas: TOP 5", juego, 15, 40, "assets/aero_2/Aero.ttf", 18, color);
-    dibujarBotones(&atras, "Atras", juego, 35, 140, "assets/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf", 16, color);
+    dibujarBotones(&atras, "Atras", juego, 35, 160, "assets/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf", 16, color);
 
     if(ordenarArchivo(nombreArch, &vecRanking, ce, maxTam) == VACIO)
         dibujarTextos("No hay datos aun", juego, 15,  70, "assets/aero_2/Aero.ttf", 12, color);
 
+    limite = ((*ce) < TOP) ? (*ce) : TOP;
     for (i = 0; i < limite; ++i)
     {
         snprintf(bufPuntaje, sizeof(bufPuntaje), "%d", vecRanking->score);
-        dibujarTextos(vecRanking->jugador, juego, 30,  y, "assets/aero_2/Aero.ttf", 14, color);
-        dibujarTextos(bufPuntaje, juego, 130, y, "assets/aero_2/Aero.ttf", 14, color);
+        dibujarTextos(vecRanking->jugador, juego, 30,  y, "assets/aero_2/Aero.ttf", 12, color);
+        dibujarTextos(bufPuntaje, juego, 110, y, "assets/aero_2/Aero.ttf", 12, color);
 
         y += 22;
         vecRanking++;
