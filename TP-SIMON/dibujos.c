@@ -230,7 +230,7 @@ void dibujarMenu(tJuego* juego, tBotones* jugar, tBotones* config, tBotones* sal
     dibujarBotones(salir, "Salir", juego, 75, 160, "assets/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf", 16, colorTexto);
 
     SDL_RenderCopy(juego->render, textTitulo, NULL, &destTitulo);
-
+    SDL_RenderPresent(juego->render);
     //funcion destruir Fuentes y Texturas
     SDL_DestroyTexture(textTitulo);
     SDL_DestroyTexture(jugar->textura);
@@ -297,6 +297,7 @@ void dibujarMenuConfig(tJuego* juego, tBotones* modos, tBotones* duracionInicial
     dibujarBotones(cantBotones, "Cantidad de botones", juego, 35, 110, "assets/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf", 12, colorTexto);
     dibujarBotones(atras, "Atras", juego, 35, 140, "assets/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf", 16, colorTexto);
 
+    SDL_RenderPresent(juego->render);
     SDL_DestroyTexture(modos->textura);
     SDL_DestroyTexture(duracionInicial->textura);
     SDL_DestroyTexture(cantBotones->textura);
@@ -317,6 +318,7 @@ void dibujarMenuModos(tJuego* juego, tBotones* modoSchonberg, tBotones* modoMoza
     dibujarBotones(modoDesafio, "Modo Desafio", juego, 35, 110, "assets/porky_s/porkys_.ttf", 16, colorTexto);
     dibujarBotones(atras, "Atras", juego, 35, 140, "assets/porky_s/porkys_.ttf", 16, colorTexto);
 
+    SDL_RenderPresent(juego->render);
     SDL_DestroyTexture(modoSchonberg->textura);
     SDL_DestroyTexture(modoMozart->textura);
     SDL_DestroyTexture(modoDesafio->textura);
@@ -340,6 +342,7 @@ void dibujarMenuBotones(tJuego* juego, tBotones* b3, tBotones* b4, tBotones* b5,
     dibujarBotones(b8, "8", juego, 120, 130, "assets/dimitri/dimitri_.ttf", 30, colorTexto);
     dibujarBotones(atras, "Atras", juego, 25, 160, "assets/porky_s/porkys_.ttf", 16, colorTexto);
 
+    SDL_RenderPresent(juego->render);
     SDL_DestroyTexture(b3->textura);
     SDL_DestroyTexture(b4->textura);
     SDL_DestroyTexture(b5->textura);
@@ -356,6 +359,30 @@ void dibujarMenuBotones(tJuego* juego, tBotones* b3, tBotones* b4, tBotones* b5,
     TTF_CloseFont(b8->fuente);
     TTF_CloseFont(atras->fuente);
 }
+
+
+void dibujarMenuDuracion(tJuego* juego, tBotones* d1000, tBotones* d1500, tBotones* d2000, tBotones* atras)
+{
+    SDL_Color colorTexto = {255, 255, 255, 240}; //blanco
+    dibujarTextos("Dificultad:", juego, 50, 25, "assets/aero_2/Aero.ttf", 18, colorTexto);
+    dibujarTextos("Duracion inicial", juego, 40, 40, "assets/aero_2/Aero.ttf", 16, colorTexto);
+    dibujarBotones(d2000, "Facil: 2000ms", juego, 35, 80, "assets/dimitri/dimitri_.ttf", 14, colorTexto);
+    dibujarBotones(d1500, "Media: 1500ms", juego, 35, 100, "assets/dimitri/dimitri_.ttf", 14, colorTexto);
+    dibujarBotones(d1000, "Pro: 1000ms", juego, 35, 120, "assets/dimitri/dimitri_.ttf", 14, colorTexto);
+    dibujarBotones(atras, "Atras", juego, 25, 160, "assets/porky_s/porkys_.ttf", 14, colorTexto);
+
+    SDL_RenderPresent(juego->render);
+    SDL_DestroyTexture(d2000->textura);
+    SDL_DestroyTexture(d1500->textura);
+    SDL_DestroyTexture(d1000->textura);
+    SDL_DestroyTexture(atras->textura);
+
+    TTF_CloseFont(d2000->fuente);
+    TTF_CloseFont(d1500->fuente);
+    TTF_CloseFont(d1000->fuente);
+    TTF_CloseFont(atras->fuente);
+}
+
 
 ///si llegamos se hace, sino no
 //void dibujarMenuPausa(tJuego* juego, tBotones* reanudar, tBotones* volverAInicio)

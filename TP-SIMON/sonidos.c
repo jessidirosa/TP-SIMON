@@ -4,7 +4,6 @@
 #include "dibujos.h"
 #include "menus.h"
 
-///del ejemplo de proyecto que nos dieron
 //Mix_Chunk* cargarSonido(const char *ruta)
 //{
 //    Mix_Chunk *sonido;
@@ -54,8 +53,6 @@ void destruirTono(Mix_Chunk *tono)
     free(tono->abuf);
     free(tono);
 }
-
-///hasta aca
 
 
 void reproducirNota(int boton, tJuego* juego) //faltaria agregar cuando se equivoca un sonido diferente

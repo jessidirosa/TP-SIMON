@@ -4,7 +4,7 @@
 #include "dibujos.h"
 #include "menus.h"
 
-void menuInicial(tJuego* juego, tPartida* partida) ///faltaria agregar el tema de que ponga su nombre por el ranking
+void menuInicial(tJuego* juego, tPartida* partida)
 {
     tBotones jugar;
     tBotones config;
@@ -16,7 +16,6 @@ void menuInicial(tJuego* juego, tPartida* partida) ///faltaria agregar el tema d
     //pega fondo en el render
     SDL_RenderCopy(juego->render, juego->fondo, NULL, NULL);
     dibujarMenu(juego, &jugar, &config, &salir, &ranking);
-    SDL_RenderPresent(juego->render);
     SDL_PollEvent(&evento);
 
     if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, jugar.destino.x, jugar.destino.y, jugar.destino.w, jugar.destino.h))
@@ -26,7 +25,7 @@ void menuInicial(tJuego* juego, tPartida* partida) ///faltaria agregar el tema d
         juego->instancia = CONFIG;
 
     if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, ranking.destino.x, ranking.destino.y, ranking.destino.w, ranking.destino.h))
-        juego->instancia = RANKING;
+        juego->instancia = RANK_ORDENADO;
 
     if(evento.type == SDL_QUIT || (evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, salir.destino.x, salir.destino.y, salir.destino.w, salir.destino.h)))
         juego->instancia = SALIR;
@@ -72,7 +71,6 @@ void menuConfig(tJuego* juego, tPartida* partida)
     //pega fondo en el render
     SDL_RenderCopy(juego->render, juego->fondo, NULL, NULL);
     dibujarMenuConfig(juego, &modos, &duracionInicial, &cantBotones, &atras);
-    SDL_RenderPresent(juego->render);
     SDL_PollEvent(&evento);
 
     if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, modos.destino.x, modos.destino.y, modos.destino.w, modos.destino.h))
@@ -103,8 +101,6 @@ void menuModos(tJuego* juego, tPartida* partida)
     SDL_RenderClear(juego->render);
     SDL_RenderCopy(juego->render, juego->fondo, NULL, NULL);
     dibujarMenuModos(juego, &modoSchonberg, &modoMozart, &modoDesafio, &atras);
-    SDL_RenderPresent(juego->render);
-
     SDL_PollEvent(&evento);
     if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, modoSchonberg.destino.x, modoSchonberg.destino.y, modoSchonberg.destino.w, modoSchonberg.destino.h))
     {
@@ -136,8 +132,6 @@ void menuCantBotones(tJuego* juego, tPartida* partida)
     SDL_RenderClear(juego->render);
     SDL_RenderCopy(juego->render, juego->fondo, NULL, NULL);
     dibujarMenuBotones(juego, &b3, &b4, &b5, &b6, &b7, &b8, &atras);
-    SDL_RenderPresent(juego->render);
-
     SDL_PollEvent(&evento);
     if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, b3.destino.x, b3.destino.y, b3.destino.w, b3.destino.h))
     {
@@ -296,7 +290,7 @@ void pedirNombreJugador(tJuego* juego, TTF_Font* fuente, char* destino, int maxL
 
 bool mostrarRanking(tJuego* juego, tPartida* partida, char* nombreArch, tRanking* vecRanking, int* ce, int* maxTam)
 {
-    int y = 60;
+    int y = 70;
     int i;
     tBotones atras;
     SDL_Color color = {255,255,255,255};
@@ -304,29 +298,29 @@ bool mostrarRanking(tJuego* juego, tPartida* partida, char* nombreArch, tRanking
     char bufPuntaje[5];
     int limite;
 
+    (*ce) = 0;
     SDL_RenderClear(juego->render);
     SDL_RenderCopy(juego->render, juego->fondo, NULL, NULL);
     dibujarTextos("Estadisticas: TOP 5", juego, 15, 40, "assets/aero_2/Aero.ttf", 18, color);
     dibujarBotones(&atras, "Atras", juego, 35, 160, "assets/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf", 16, color);
 
-    if(ordenarArchivo(nombreArch, &vecRanking, ce, maxTam) == VACIO)
-        dibujarTextos("No hay datos aun", juego, 15,  70, "assets/aero_2/Aero.ttf", 12, color);
+    if(ordenarArchivo(nombreArch, &vecRanking, ce, maxTam, juego) == VACIO)
+        dibujarTextos("No hay datos aun", juego, 25,  70, "assets/aero_2/Aero.ttf", 12, color);
 
     limite = ((*ce) < TOP) ? (*ce) : TOP;
     for (i = 0; i < limite; ++i)
     {
         snprintf(bufPuntaje, sizeof(bufPuntaje), "%d", vecRanking->score);
-        dibujarTextos(vecRanking->jugador, juego, 30,  y, "assets/aero_2/Aero.ttf", 12, color);
-        dibujarTextos(bufPuntaje, juego, 110, y, "assets/aero_2/Aero.ttf", 12, color);
+        dibujarTextos(vecRanking->jugador, juego, 50,  y, "assets/aero_2/Aero.ttf", 12, color);
+        dibujarTextos(bufPuntaje, juego, 130, y, "assets/aero_2/Aero.ttf", 12, color);
 
-        y += 22;
+        y += 14;
         vecRanking++;
     }
 
+    SDL_RenderPresent(juego->render);
     SDL_DestroyTexture(atras.textura);
     TTF_CloseFont(atras.fuente);
-
-    SDL_RenderPresent(juego->render);
 
     SDL_PollEvent(&evento);
     if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, atras.destino.x, atras.destino.y, atras.destino.w, atras.destino.h))
@@ -335,21 +329,38 @@ bool mostrarRanking(tJuego* juego, tPartida* partida, char* nombreArch, tRanking
     return true;
 }
 
-//void menuDuracionInicial(tJuego* juego, tPartida* partida)
-//{
-//    SDL_Event evento;
-//    char* buffer = malloc(sizeof(MAX_DURACION));
-//    SDL_StartTextInput();
-//
-//    if(evento.type == SDL_TEXTINPUT)
-//    {
-//
-//    }
-//    //en proceso
-//
-//
-//    SDL_StopTextInput();
-//}
+void menuDuracionInicial(tJuego* juego, tPartida* partida)
+{
+    tBotones d1000, d1500, d2000;
+    tBotones atras;
+    SDL_Event evento;
+
+    SDL_RenderClear(juego->render);
+    SDL_RenderCopy(juego->render, juego->fondo, NULL, NULL);
+    dibujarMenuDuracion(juego, &d1000, &d1500, &d2000, &atras);
+    SDL_PollEvent(&evento);
+    if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, d2000.destino.x, d2000.destino.y, d2000.destino.w, d2000.destino.h))
+    {
+        partida->tiempoNota = TIEMPO_FACIL;
+        juego->instancia = CONFIG;
+    }
+
+    if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, d1500.destino.x, d1500.destino.y, d1500.destino.w, d1500.destino.h))
+    {
+        partida->tiempoNota = TIEMPO_MEDIO;
+        juego->instancia = CONFIG;
+    }
+
+    if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, d1000.destino.x, d1000.destino.y, d1000.destino.w, d1000.destino.h))
+    {
+        partida->tiempoNota = TIEMPO_PRO;
+        juego->instancia = CONFIG;
+    }
+
+    if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, atras.destino.x, atras.destino.y, atras.destino.w, atras.destino.h))
+        juego->instancia = CONFIG;
+
+}
 
 
 ///si llegamos se hace, sino no

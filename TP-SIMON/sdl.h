@@ -21,6 +21,7 @@
 #define BOTONES 6
 #define DURACION_INICIAL 7
 #define RANKING 8
+#define RANK_ORDENADO 9
 
 
 typedef struct

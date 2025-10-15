@@ -51,11 +51,11 @@ int main(int argc, char* argv[])
         if(juego.instancia == BOTONES)
             menuCantBotones(&juego, &partida);
 
-        if(juego.instancia == RANKING)
+        if(juego.instancia == RANKING || juego.instancia == RANK_ORDENADO)
             mostrarRanking(&juego, &partida, "Rankings.bin", vecRanking, &ce, &maxTam);
 
-//        if(juego.instancia == DURACION_INICIAL)
-//            menuDuracionInicial(&juego, &partida);
+        if(juego.instancia == DURACION_INICIAL)
+            menuDuracionInicial(&juego, &partida);
 
         if(juego.instancia == JUGANDO)
         {

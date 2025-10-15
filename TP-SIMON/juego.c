@@ -17,8 +17,6 @@ bool puntoEnRectangulo(int x, int y, int xRect, int yRect, int anchoRect, int al
 
 void inicializarPartida(tPartida* partida, tJuego* juego)
 {
-    //el nombre del jugador ya llega en la struct
-
     partida->sec = malloc(sizeof(int) * MAX);
     if(!partida->sec)
         return;
@@ -32,8 +30,12 @@ void inicializarPartida(tPartida* partida, tJuego* juego)
     if(partida->modoJuego == SCHONBERG)
         crearSecuenciaAleatoria(partida, juego);
 
-//    if(partida->modoJuego = MOZART)
-//        cargarSecuenciaConArchivo(partida, juego);
+    if(partida->modoJuego = MOZART)
+    {
+        elegirMelodia(juego, )
+        crearSecuenciaPorArchivo(partida, juego, melodia);
+    }
+
 
 //    if(partida->modoJuego == DESAFIO)
 //        cargarArchivoConIngresoJugador(partida, juego);
@@ -61,7 +63,7 @@ void iniciarJuego(tPartida* partida, tJuego* juego, int** mat) //comienza la par
     dibujarBotonCentro(juego, &volver, "Volver");
 
     dibujarBotones(&totems, "TTT", juego, POS_VIDAS, 170, "assets/minedings/minedings.ttf", 14, colorTotem);
-    while(partida->estado != GAMEOVER)
+    while(partida->estado != GAMEOVER && partida->estado != SALIR)
     {
         //ver circularidad de secuencia para que sea continua hasta que el jugador pierda (resize de vector)
         secuenciaJuego(partida, juego, mat); //mostrara la secuencia desde sec a psec a medida que avanza. el vector sec ya tendra en numeros la secuencia con el modo y los tonos definidos previamente en config
@@ -69,17 +71,16 @@ void iniciarJuego(tPartida* partida, tJuego* juego, int** mat) //comienza la par
         if(respuestausuario== ERROR && vidas==0)
             partida->estado = GAMEOVER;
         else if(respuestausuario == ERROR && vidas>0) {
-            vidas-=1;
+            vidas--;
 //            SDL_SetRenderDrawColor(juego->render, 0, 0, 0, 150);
 //            SDL_RenderPresent(juego->render);
             SDL_Delay(10);
-
             dibujarBotones(&totems, "X", juego, POS_VIDAS + x, 170, "assets/porky_s/porkys_.ttf", 14, colorX);
             x += 15;
         }
-
         else if(respuestausuario == SALIR)
-            partida->estado = GAMEOVER; //no sale del todo
+            partida->estado = SALIR;
+
         else
         {
             partida->ranking.score++;
@@ -91,8 +92,10 @@ void iniciarJuego(tPartida* partida, tJuego* juego, int** mat) //comienza la par
     insertarArchivoRankingSinDup(partida);
     ///funcion: ordenar archivo ranking
 
-    //poner de reiniciarlo o algo
-    juego->instancia = RANKING; ///instancia RANKING: muestra ranking y boton reiniciar
+    if(partida->estado == GAMEOVER)//poner de reiniciarlo o algo
+        juego->instancia = RANKING; ///instancia RANKING: muestra ranking y boton reiniciar
+    else
+        juego->instancia = MENU;
 }
 
 int respuesta(tPartida* partida, tJuego* juego, int** mat, tBotones* volver)
@@ -308,10 +311,11 @@ bool redimensionar(void** pv, int ce, size_t tam, int* cap)
     *pv = tmp;
     *cap = nuevaCap;
 
+    free(tmp);
     return true;
 }
 
-int ordenarArchivo(char* nombre, tRanking** vRank, int* ce, int* maxTam)
+int ordenarArchivo(char* nombre, tRanking** vRank, int* ce, int* maxTam, tJuego* juego)
 {
     tRanking* r = *vRank;
     tRanking* fin;
@@ -343,8 +347,13 @@ int ordenarArchivo(char* nombre, tRanking** vRank, int* ce, int* maxTam)
 
     fclose(pf);
 
-    if((*ce) > 0)
+    r = (*vRank);
+    if((*ce) > 0 && juego->instancia == RANKING)
+    {
         qsort(r, (*ce), sizeof(tRanking), compararRankings);
+        juego->instancia = RANK_ORDENADO;
+    }
+
     else if((*ce) == 0)
         return VACIO;
 
@@ -352,7 +361,6 @@ int ordenarArchivo(char* nombre, tRanking** vRank, int* ce, int* maxTam)
     if(!pf)
         return false;
 
-    r = (*vRank);
     fin = r + (*ce);
     while(r < fin)
     {
@@ -370,4 +378,33 @@ int compararRankings(const void* r1, const void* r2)
     tRanking* rank2 = (tRanking*)r2;
 
     return (rank2->score - rank1->score);
+}
+
+bool crearSecuenciaPorArchivo(tPartida* partida, tJuego* juego, char* nombreArch) //modo mozart
+{
+    int* fin = partida->sec + MAX; //despues resize
+    int* p = partida->sec;
+    char buffer[MAX];
+    char* n = buffer;
+    FILE* pf = fopen(nombreArch, "rt");
+    if(!pf)
+    {
+        printf("no se pudo abrir archivo de melodia");
+        return false;
+    }
+
+    fgets(buffer, sizeof(buffer), pf);
+    while(p < fin)
+    {
+        while(sscanf(n, "%d", p))
+        {
+            n++;
+            p++;
+        }
+
+        n = buffer;
+    }
+
+    fclose(pf);
+    return true;
 }
