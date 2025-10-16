@@ -10,12 +10,13 @@ void menuInicial(tJuego* juego, tPartida* partida)
     tBotones config;
     tBotones ranking;
     tBotones salir;
+    tBotones ayuda;
     SDL_Event evento;
     //limpia el lienzo
     SDL_RenderClear(juego->render);
     //pega fondo en el render
     SDL_RenderCopy(juego->render, juego->fondo, NULL, NULL);
-    dibujarMenu(juego, &jugar, &config, &salir, &ranking);
+    dibujarMenu(juego, &jugar, &config, &salir, &ranking, &ayuda);
     SDL_PollEvent(&evento);
 
     if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, jugar.destino.x, jugar.destino.y, jugar.destino.w, jugar.destino.h))
@@ -30,7 +31,6 @@ void menuInicial(tJuego* juego, tPartida* partida)
     if(evento.type == SDL_QUIT || (evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, salir.destino.x, salir.destino.y, salir.destino.w, salir.destino.h)))
         juego->instancia = SALIR;
 
-
     if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, jugar.destino.x, jugar.destino.y, jugar.destino.w, jugar.destino.h))
         {
             SDL_SetRenderDrawBlendMode(juego->render, SDL_BLENDMODE_BLEND);
@@ -40,7 +40,7 @@ void menuInicial(tJuego* juego, tPartida* partida)
             SDL_RenderPresent(juego->render);
 
 
-            TTF_Font* fuente = TTF_OpenFont("C:\\Windows\\Fonts\\arial.ttf",20);
+            TTF_Font* fuente = TTF_OpenFont("fnt/roboto-black.ttf",16);
             if (!fuente)
             {
                 printf("Error al cargar fuente: %s\n", TTF_GetError());
@@ -55,8 +55,9 @@ void menuInicial(tJuego* juego, tPartida* partida)
             juego->instancia = JUGANDO;
         }
 
+    if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, ayuda.destino.x, ayuda.destino.y, ayuda.destino.w, ayuda.destino.h))
+        juego->instancia = AYUDA;
 }
-
 
 void menuConfig(tJuego* juego, tPartida* partida)
 {
@@ -64,13 +65,14 @@ void menuConfig(tJuego* juego, tPartida* partida)
     tBotones duracionInicial;
     tBotones cantBotones;
     tBotones atras;
+    tBotones timbre;
     SDL_Event evento;
 
     //limpia el lienzo
     SDL_RenderClear(juego->render);
     //pega fondo en el render
     SDL_RenderCopy(juego->render, juego->fondo, NULL, NULL);
-    dibujarMenuConfig(juego, &modos, &duracionInicial, &cantBotones, &atras);
+    dibujarMenuConfig(juego, &modos, &duracionInicial, &cantBotones, &atras, &timbre);
     SDL_PollEvent(&evento);
 
     if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, modos.destino.x, modos.destino.y, modos.destino.w, modos.destino.h))
@@ -84,6 +86,9 @@ void menuConfig(tJuego* juego, tPartida* partida)
 
     if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, atras.destino.x, atras.destino.y, atras.destino.w, atras.destino.h))
         juego->instancia = MENU;
+
+    if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, timbre.destino.x, timbre.destino.y, timbre.destino.w, timbre.destino.h))
+        juego->instancia = TIMBRE_OPCIONES;
 
     if(evento.type == SDL_QUIT)
         juego->instancia = SALIR;
@@ -121,6 +126,9 @@ void menuModos(tJuego* juego, tPartida* partida)
 
     if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, atras.destino.x, atras.destino.y, atras.destino.w, atras.destino.h))
         juego->instancia = CONFIG;
+
+    if (evento.type == SDL_QUIT)
+            juego->instancia = SALIR;
 }
 
 void menuCantBotones(tJuego* juego, tPartida* partida)
@@ -172,6 +180,8 @@ void menuCantBotones(tJuego* juego, tPartida* partida)
     if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, atras.destino.x, atras.destino.y, atras.destino.w, atras.destino.h))
         juego->instancia = CONFIG;
 
+    if (evento.type == SDL_QUIT)
+            juego->instancia = SALIR;
 }
 
 void menuCantBotonesDesafio(tJuego* juego, tPartida* partida)
@@ -223,9 +233,10 @@ void menuCantBotonesDesafio(tJuego* juego, tPartida* partida)
     if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, atras.destino.x, atras.destino.y, atras.destino.w, atras.destino.h))
         juego->instancia = CONFIG;
 
+    if (evento.type == SDL_QUIT)
+        juego->instancia = SALIR;
 
 }
-
 
 void pedirNombreJugador(tJuego* juego, TTF_Font* fuente, char* destino, int maxLen)
 {
@@ -253,6 +264,7 @@ void pedirNombreJugador(tJuego* juego, TTF_Font* fuente, char* destino, int maxL
 
             if (evento.type == SDL_QUIT) {
                 escribiendo = 0;
+                juego->instancia = SALIR;
                 break;
             }
 
@@ -280,13 +292,13 @@ void pedirNombreJugador(tJuego* juego, TTF_Font* fuente, char* destino, int maxL
 
             if (evento.type == SDL_TEXTINPUT)
             {
-                // DEBUG: ves en consola lo que SDL entrega
-                // printf("SDL_TEXTINPUT: '%s'\n", evento.text.text);
-
                 if ((int)strlen(destino) + (int)strlen(evento.text.text) < maxLen) {
                     strcat(destino, evento.text.text);
                 }
             }
+
+            if (evento.type == SDL_QUIT)
+                juego->instancia = SALIR;
         }
 
         // ---------- DIBUJADO ----------
@@ -301,7 +313,7 @@ void pedirNombreJugador(tJuego* juego, TTF_Font* fuente, char* destino, int maxL
         SDL_Surface* sPrompt = TTF_RenderText_Solid(fuente, "Ingrese su nombre:", blanco);
         if (sPrompt) {
             SDL_Texture* tPrompt = SDL_CreateTextureFromSurface(juego->render, sPrompt);
-            SDL_Rect rPrompt = {10,75, sPrompt->w, sPrompt->h};
+            SDL_Rect rPrompt = {30,75, sPrompt->w, sPrompt->h};
             SDL_RenderCopy(juego->render, tPrompt, NULL, &rPrompt);
             SDL_DestroyTexture(tPrompt);
             SDL_FreeSurface(sPrompt);
@@ -327,7 +339,7 @@ void pedirNombreJugador(tJuego* juego, TTF_Font* fuente, char* destino, int maxL
         SDL_Surface* sText = TTF_RenderText_Solid(fuente, buf, blanco);
         if (sText) {
             SDL_Texture* tText = SDL_CreateTextureFromSurface(juego->render, sText);
-            SDL_Rect rText = {10,110, sText->w, sText->h};
+            SDL_Rect rText = {30,110, sText->w, sText->h};
             SDL_RenderCopy(juego->render, tText, NULL, &rText);
             SDL_DestroyTexture(tText);
             SDL_FreeSurface(sText);
@@ -354,18 +366,18 @@ bool mostrarRanking(tJuego* juego, tPartida* partida, char* nombreArch, tRanking
     (*ce) = 0;
     SDL_RenderClear(juego->render);
     SDL_RenderCopy(juego->render, juego->fondo, NULL, NULL);
-    dibujarTextos("Estadisticas: TOP 5", juego, 15, 40, "fnt/aero_2/Aero.ttf", 18, color);
-    dibujarBotones(&atras, "Atras", juego, 35, 160, "fnt/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf", 16, color);
+    dibujarTextos("Estadisticas: TOP 5", juego, 15, 40, "fnt/Aero.ttf", 18, color);
+    dibujarBotones(&atras, "Atras", juego, 35, 160, "fnt/VCR_OSD_MONO_1.001.ttf", 16, color);
 
     if(ordenarArchivo(nombreArch, &vecRanking, ce, maxTam, juego) == VACIO)
-        dibujarTextos("No hay datos aun", juego, 25,  70, "fnt/aero_2/Aero.ttf", 12, color);
+        dibujarTextos("No hay datos aun", juego, 25,  70, "fnt/Aero.ttf", 12, color);
 
     limite = ((*ce) < TOP) ? (*ce) : TOP;
     for (i = 0; i < limite; ++i)
     {
         snprintf(bufPuntaje, sizeof(bufPuntaje), "%d", vecRanking->score);
-        dibujarTextos(vecRanking->jugador, juego, 50,  y, "fnt/aero_2/Aero.ttf", 12, color);
-        dibujarTextos(bufPuntaje, juego, 130, y, "fnt/aero_2/Aero.ttf", 12, color);
+        dibujarTextos(vecRanking->jugador, juego, 50,  y, "fnt/Aero.ttf", 12, color);
+        dibujarTextos(bufPuntaje, juego, 130, y, "fnt/Aero.ttf", 12, color);
 
         y += 14;
         vecRanking++;
@@ -378,6 +390,9 @@ bool mostrarRanking(tJuego* juego, tPartida* partida, char* nombreArch, tRanking
     SDL_PollEvent(&evento);
     if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, atras.destino.x, atras.destino.y, atras.destino.w, atras.destino.h))
         juego->instancia = MENU;
+
+    if (evento.type == SDL_QUIT)
+            juego->instancia = SALIR;
 
     return true;
 }
@@ -413,24 +428,143 @@ void menuDuracionInicial(tJuego* juego, tPartida* partida)
     if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, atras.destino.x, atras.destino.y, atras.destino.w, atras.destino.h))
         juego->instancia = CONFIG;
 
+    if (evento.type == SDL_QUIT)
+            juego->instancia = SALIR;
+
 }
 
+void menuTimbre(tJuego* juego, tPartida* partida)
+{
+    tBotones bSeno, bCuad, bSierra, bTriang, bAtras;
+    SDL_Event ev;
 
-///si llegamos se hace, sino no
-//void menuPausa(tJuego* juego)
-//{
-//    tBotones reanudar;
-//    tBotones volverAInicio;
-//    SDL_Event evento;
-//    dibujarMenuPausa(juego, &reanudar, &volverAInicio);
-//
-//    SDL_PollEvent(&evento);
-//
-//    if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, reanudar.destino.x, reanudar.destino.y, ANCHO_BOTON, ALTO_BOTON))
-//    {
-//        juego->instancia = JUGANDO;
-//        SDL_RenderClear(juego->render);
-//    }
-//
-//
-//}
+    SDL_RenderClear(juego->render);
+    SDL_RenderCopy(juego->render, juego->fondo, NULL, NULL);
+
+    SDL_Color c = {255, 255, 255, 240};
+    dibujarTextos("Timbre:", juego, 35, 40, "fnt/Aero.ttf", 18, c);
+
+    dibujarBotones(&bSeno,   "1: Seno",     juego, 35, 60,  "fnt/VCR_OSD_MONO_1.001.ttf", 16, c);
+    dibujarBotones(&bCuad,   "2: Cuadrada", juego, 35, 80, "fnt/VCR_OSD_MONO_1.001.ttf", 16, c);
+    dibujarBotones(&bSierra, "3: Sierra",   juego, 35, 100, "fnt/VCR_OSD_MONO_1.001.ttf", 16, c);
+    dibujarBotones(&bTriang, "4: Triang",   juego, 35, 120, "fnt/VCR_OSD_MONO_1.001.ttf", 16, c);
+    dibujarBotones(&bAtras,  "Atras",    juego, 35, 170, "fnt/VCR_OSD_MONO_1.001.ttf", 16, c);
+
+    SDL_RenderPresent(juego->render);
+
+    while(SDL_PollEvent(&ev))
+    {
+        if(ev.type == SDL_MOUSEBUTTONDOWN)
+        {
+            if(puntoEnRectangulo(ev.button.x, ev.button.y, bSeno.destino.x, bSeno.destino.y, bSeno.destino.w, bSeno.destino.h))
+            {
+                juego->timbre = TIMBRE_SENO;
+                juego->instancia = CONFIG;
+            }
+
+            else if(puntoEnRectangulo(ev.button.x, ev.button.y, bCuad.destino.x, bCuad.destino.y, bCuad.destino.w, bCuad.destino.h))
+            {
+                juego->timbre = TIMBRE_CUADRADA;
+                juego->instancia = CONFIG;
+            }
+
+            else if(puntoEnRectangulo(ev.button.x, ev.button.y, bSierra.destino.x, bSierra.destino.y, bSierra.destino.w, bSierra.destino.h))
+            {
+                juego->timbre = TIMBRE_SIERRA;
+                juego->instancia = CONFIG;
+            }
+
+            else if(puntoEnRectangulo(ev.button.x, ev.button.y, bTriang.destino.x, bTriang.destino.y, bTriang.destino.w, bTriang.destino.h))
+            {
+                juego->timbre = TIMBRE_TRIANG;
+                juego->instancia = CONFIG;
+            }
+
+            else if(puntoEnRectangulo(ev.button.x, ev.button.y, bAtras.destino.x, bAtras.destino.y, bAtras.destino.w, bAtras.destino.h))
+                juego->instancia = CONFIG;
+
+        }
+        else if(ev.type == SDL_KEYDOWN && ev.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
+            juego->instancia = CONFIG;
+
+        if (ev.type == SDL_QUIT)
+            juego->instancia = SALIR;
+    }
+}
+
+void menuAyuda(tJuego* juego, tPartida* partida)
+{
+    tBotones atras;
+    SDL_Event evento;
+
+    SDL_RenderClear(juego->render);
+    SDL_RenderCopy(juego->render, juego->fondo, NULL, NULL);
+    dibujarMenuAyuda(juego, &atras);
+    SDL_PollEvent(&evento);
+
+    if(evento.type == SDL_MOUSEBUTTONDOWN && puntoEnRectangulo(evento.button.x, evento.button.y, atras.destino.x, atras.destino.y, atras.destino.w, atras.destino.h))
+        juego->instancia = CONFIG;
+
+    if (evento.type == SDL_QUIT)
+            juego->instancia = SALIR;
+}
+
+void errorMozart(tJuego* juego, tPartida* partida)
+{
+    SDL_RenderClear(juego->render);
+    SDL_RenderCopy(juego->render, juego->fondo, NULL, NULL);
+
+    SDL_Color blanco = (SDL_Color){255,255,255,255};
+    SDL_Color rojo = (SDL_Color){255,0, 0,150};
+    dibujarTextos("ERROR:", juego, 20, 20, "fnt/roboto-black.ttf", 20, rojo);
+    dibujarTextos("No se puede utilizar", juego, 20, 50, "fnt/roboto-black.ttf", 12, blanco);
+    dibujarTextos("el modo Mozart.", juego, 20, 65, "fnt/roboto-black.ttf", 12, blanco);
+    dibujarTextos("Para saber como utilizarlo, ve a Ayuda", juego, 20, 80, "fnt/roboto-black.ttf", 10, blanco);
+
+    tBotones bAyuda, bVolver;
+    dibujarBotones(&bAyuda,  "Ir a Ayuda", juego, 30, 100 + 50, "fnt/VCR_OSD_MONO_1.001.ttf", 16, blanco);
+    dibujarBotones(&bVolver, "Volver",     juego, 30, 120, "fnt/VCR_OSD_MONO_1.001.ttf", 16, blanco);
+
+    SDL_RenderPresent(juego->render);
+
+    SDL_Event ev;
+    int esperando = 1;
+
+    if (partida)
+        partida->estado = ERROR_MOZART;
+
+    while (esperando)
+    {
+        if (!SDL_WaitEvent(&ev))
+            continue;
+
+        switch (ev.type)
+        {
+        case SDL_QUIT:
+            juego->instancia = SALIR;
+            esperando = 0;
+            break;
+
+        case SDL_KEYDOWN:
+            if (ev.key.keysym.scancode == SDL_SCANCODE_ESCAPE) {
+                juego->instancia = CONFIG;
+                esperando = 0;
+            }
+            break;
+
+        case SDL_MOUSEBUTTONDOWN:
+            if (puntoEnRectangulo(ev.button.x, ev.button.y, bAyuda.destino.x, bAyuda.destino.y, bAyuda.destino.w, bAyuda.destino.h))
+            {
+                juego->instancia = AYUDA;
+                esperando = 0;
+            }
+            else if (puntoEnRectangulo(ev.button.x, ev.button.y, bVolver.destino.x, bVolver.destino.y, bVolver.destino.w, bVolver.destino.h))
+            {
+                juego->instancia = CONFIG;
+                esperando = 0;
+            }
+            break;
+        }
+    }
+}
+

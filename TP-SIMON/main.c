@@ -59,6 +59,9 @@ int main(int argc, char* argv[])
         if(juego.instancia == CONFIG)
             menuConfig(&juego, &partida);
 
+        if(juego.instancia == TIMBRE_OPCIONES)
+            menuTimbre(&juego, &partida);
+
         if(juego.instancia == MODOS)
             menuModos(&juego, &partida);
 
@@ -79,6 +82,12 @@ int main(int argc, char* argv[])
 
         if(juego.instancia == GRABANDO)
             grabarMelodia(&juego, mat, &partida);
+
+        if(juego.instancia == AYUDA)
+            menuAyuda(&juego, &partida);
+
+        if(juego.instancia == ERROR_MOZART)
+            errorMozart(&juego, &partida);
 
         if(juego.instancia == JUGANDO)
         {

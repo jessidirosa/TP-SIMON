@@ -64,8 +64,8 @@ void iniciarJuego(tPartida* partida, tJuego* juego, int** mat) //comienza la par
     dibujarBordes(juego);
     dibujarBotonCentro(juego, &volver, "Volver");
 
-    dibujarBotones(&totems, "TTT", juego, POS_VIDAS, 170, "fnt/minedings/minedings.ttf", 14, colorTotem);
-    while(partida->estado != GAMEOVER && partida->estado != SALIR)
+    dibujarBotones(&totems, "TTT", juego, POS_VIDAS, 170, "fnt/minedings.ttf", 14, colorTotem);
+    while(partida->estado != GAMEOVER && partida->estado != SALIR && partida->estado != ERROR_MOZART)
     {
         secuenciaJuego(partida, juego, mat);
         respuestausuario=respuesta(partida,juego,mat,&volver);
@@ -76,7 +76,7 @@ void iniciarJuego(tPartida* partida, tJuego* juego, int** mat) //comienza la par
 //            SDL_SetRenderDrawColor(juego->render, 0, 0, 0, 150);
 //            SDL_RenderPresent(juego->render);
             SDL_Delay(10);
-            dibujarBotones(&totems, "X", juego, POS_VIDAS + x, 170, "fnt/porky_s/porkys_.ttf", 14, colorX);
+            dibujarBotones(&totems, "X", juego, POS_VIDAS + x, 170, "fnt/porkys_.ttf", 14, colorX);
             x += 15;
         }
         else if(respuestausuario == SALIR)
@@ -93,10 +93,13 @@ void iniciarJuego(tPartida* partida, tJuego* juego, int** mat) //comienza la par
     insertarArchivoRankingSinDup(partida);
     ///funcion: ordenar archivo ranking
 
-    if(partida->estado == GAMEOVER)//poner de reiniciarlo o algo
+    if(partida->estado == GAMEOVER)
         juego->instancia = RANKING; ///instancia RANKING: muestra ranking y boton reiniciar
-    else
+    else if(partida->estado == SALIR)
         juego->instancia = MENU;
+    else if(partida->estado == ERROR_MOZART)
+        juego->instancia = ERROR_MOZART;
+
 }
 
 int respuesta(tPartida* partida, tJuego* juego, int** mat, tBotones* volver)
@@ -130,6 +133,8 @@ int respuesta(tPartida* partida, tJuego* juego, int** mat, tBotones* volver)
                 if (boton != *p)
                 {
                     printf("Error! Esperaba %d pero se toco %d\n", *p, boton);
+                    reproducirError(juego);
+                    SDL_Delay(200);
                     return ERROR;
                 }
 
@@ -392,6 +397,8 @@ bool crearSecuenciaPorArchivo(tPartida* partida, tJuego* juego, char* nombreArch
 
     FILE* pf = fopen(nombreArch, "rt");
     if(!pf) {
+        juego->instancia = ERROR_MOZART;
+        partida->estado = ERROR_MOZART;
         printf("no se pudo abrir archivo de melodia");
         return false;
     }
@@ -465,8 +472,10 @@ void ingresarSecuenciaPorBotones(tJuego* juego, int** mat, tPartida* partida) //
     {
         juego->instancia = GRABANDO;
     }
-}
 
+    if (evento.type == SDL_QUIT)
+            juego->instancia = SALIR;
+}
 
 void grabarMelodia(tJuego* juego, int** mat, tPartida* partida)
 {
@@ -529,6 +538,9 @@ void grabarMelodia(tJuego* juego, int** mat, tPartida* partida)
             break;
         }
     }
+
+    if (ev.type == SDL_QUIT)
+            juego->instancia = SALIR;
 }
 
 

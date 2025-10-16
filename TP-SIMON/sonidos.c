@@ -55,15 +55,17 @@ void destruirTono(Mix_Chunk *tono)
 }
 
 
-void reproducirNota(int boton, tJuego* juego) //faltaria agregar cuando se equivoca un sonido diferente
+void reproducirNota(int boton, tJuego* juego)
 {
-    int* pn = juego->tonosBotones;
+    float* pn = juego->tonosBotones;
     Mix_Chunk* tono;
 
-    pn += boton; //vamos al boton corresp
-    tono = crearTono((*pn));
-    Mix_PlayChannel(-1, tono, 0);
+    pn += boton;
+    tono = crearTonoPorTimbre((*pn), juego->timbre);
+    if(!tono)
+        return;
 
+    Mix_PlayChannel(-1, tono, 0);
 }
 
 void asignarSonidos(tJuego* juego) //carga el vector de tonos de juego->tonosBotones con las frec correspondientes (cargadas en matriz) dependiendo la cant de botones
@@ -77,7 +79,7 @@ void asignarSonidos(tJuego* juego) //carga el vector de tonos de juego->tonosBot
                                          {8, 261.63, 293.66, 329.63,  349.23, 392.00, 440.00, 493.88, 523.25}};
 
 
-    int* pTonos = juego->tonosBotones;
+    float* pTonos = juego->tonosBotones;
 
     while(matTonos[i][0] != juego->botones)
         i++;
@@ -87,4 +89,115 @@ void asignarSonidos(tJuego* juego) //carga el vector de tonos de juego->tonosBot
         *pTonos = matTonos[i][j];
         pTonos++;
     }
+}
+
+Mix_Chunk* crearTonoBase(float frecuencia, float (*onda)(float))
+{
+    int total_muestras = FREC_MUESTREO * DURACION_SEG;
+    short* buf = (short*)malloc(sizeof(short) * total_muestras);
+    if(!buf)
+        return NULL;
+
+    for(int i = 0; i < total_muestras; i++)
+    {
+        float t = (float)i / (float)FREC_MUESTREO;
+        float s = onda(2.0f * (float)M_PI * frecuencia * t);
+        float v = s * AMPLITUD_TONO;
+        if(v > 32767.0f) v = 32767.0f;
+        if(v < -32768.0f) v = -32768.0f;
+        buf[i] = (short)v;
+    }
+
+    Mix_Chunk* ch = (Mix_Chunk*)malloc(sizeof(Mix_Chunk));
+    if(!ch)
+    {
+        free(buf);
+        return NULL;
+    }
+
+    ch->abuf = (Uint8*)buf;
+    ch->alen = (Uint32)(sizeof(short) * total_muestras);
+    ch->allocated = 1; //hace que SDL_mixer libere el buffer
+    ch->volume = MIX_MAX_VOLUME;
+
+    return ch;
+}
+
+float ondaSeno(float x)
+{
+    return sinf(x);
+}
+
+float ondaCuadrada(float x)
+{
+    if(sinf(x) >= 0.f)
+        return 1.f;
+    else
+        return -1.f;
+}
+
+float ondaSierra(float x)
+{
+    float p = fmodf(x, 2.f * (float)M_PI) / (2.f * (float)M_PI);
+    return 2.f * p - 1.f;
+}
+
+float ondaTriang(float x)
+{
+    float p = fmodf(x, 2.f * (float)M_PI) / (2.f * (float)M_PI);
+    float v = 1.f - fabsf(2.f * p - 1.f);
+    return (v * 2.f) - 1.f;
+}
+
+//Wrappers por timbre
+Mix_Chunk* crearTonoSeno(float f)
+{
+    return crearTonoBase(f, ondaSeno);
+}
+
+Mix_Chunk* crearTonoCuadrada(float f)
+{
+    return crearTonoBase(f, ondaCuadrada);
+}
+
+Mix_Chunk* crearTonoSierra(float f)
+{
+    return crearTonoBase(f, ondaSierra);
+}
+
+Mix_Chunk* crearTonoTriang(float f)
+{
+    return crearTonoBase(f, ondaTriang);
+}
+
+Mix_Chunk* crearTonoPorTimbre(float f, eTimbre timbre)
+{
+    switch(timbre)
+    {
+        case TIMBRE_CUADRADA:
+            return crearTonoCuadrada(f);
+        case TIMBRE_SIERRA:
+            return crearTonoSierra(f);
+        case TIMBRE_TRIANG:
+            return crearTonoTriang(f);
+        case TIMBRE_SENO:
+        default:
+            return crearTonoSeno(f);
+    }
+}
+
+
+void reproducirError(tJuego* juego)
+{
+    float frecuencia = 110.f;
+
+    Mix_Chunk* tono = crearTonoCuadrada(frecuencia);
+    if(!tono)
+        return;
+
+    Uint32 muestras_180ms = (Uint32)(FREC_MUESTREO * 0.18f);
+    if(muestras_180ms * sizeof(short) < tono->alen)
+        tono->alen = muestras_180ms * sizeof(short);
+
+    Mix_PlayChannel(-1, tono, 0);
 }

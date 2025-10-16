@@ -180,7 +180,7 @@ int** crearMatriz(int cf, int cc, size_t tam)
 void dibujarBotonCentro(tJuego* juego, tBotones* boton, char* nombre)
 {
     SDL_Color colorTexto = {255, 255, 255, 240}; //blanco
-    boton->fuente = TTF_OpenFont("fnt/porky_s/porkys_.ttf", 18);
+    boton->fuente = TTF_OpenFont("fnt/porkys_.ttf", 18);
     if (!boton->fuente)
         printf("OpenFont: %s\n", TTF_GetError());
 
@@ -199,7 +199,7 @@ void dibujarBotonCentro(tJuego* juego, tBotones* boton, char* nombre)
     TTF_CloseFont(boton->fuente);
 }
 
-void dibujarMenu(tJuego* juego, tBotones* jugar, tBotones* config, tBotones* salir, tBotones* ranking)
+void dibujarMenu(tJuego* juego, tBotones* jugar, tBotones* config, tBotones* salir, tBotones* ranking, tBotones* ayuda)
 {
     TTF_Font* titulo;
     SDL_Texture* textTitulo;
@@ -208,7 +208,7 @@ void dibujarMenu(tJuego* juego, tBotones* jugar, tBotones* config, tBotones* sal
     SDL_Color colorTexto = {255, 255, 255, 240}; //blanco
     int anchoTitulo, altoTitulo;
 
-    titulo = TTF_OpenFont("fnt/aero_2/Aero.ttf", 24);
+    titulo = TTF_OpenFont("fnt/Aero.ttf", 24);
     if (!titulo)
         printf("OpenFont: %s\n", TTF_GetError());
 
@@ -223,10 +223,11 @@ void dibujarMenu(tJuego* juego, tBotones* jugar, tBotones* config, tBotones* sal
     textTitulo = SDL_CreateTextureFromSurface(juego->render, surfTitulo);
     SDL_FreeSurface(surfTitulo);
 
-    dibujarBotones(jugar, "Jugar", juego, 75, 90, "fnt/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf", 16, colorTexto);
-    dibujarBotones(config, "Configuracion", juego, 40, 110, "fnt/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf", 16, colorTexto);
-    dibujarBotones(ranking, "Ranking", juego, 65, 130, "fnt/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf", 16, colorTexto);
-    dibujarBotones(salir, "Salir", juego, 75, 160, "fnt/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf", 16, colorTexto);
+    dibujarBotones(jugar, "Jugar", juego, 75, 90, "fnt/VCR_OSD_MONO_1.001.ttf", 16, colorTexto);
+    dibujarBotones(config, "Configuracion", juego, 40, 110, "fnt/VCR_OSD_MONO_1.001.ttf", 16, colorTexto);
+    dibujarBotones(ranking, "Ranking", juego, 65, 130, "fnt/VCR_OSD_MONO_1.001.ttf", 16, colorTexto);
+    dibujarBotones(ayuda, "Ayuda", juego, 140, 20, "fnt/VCR_OSD_MONO_1.001.ttf", 16, colorTexto);
+    dibujarBotones(salir, "Salir", juego, 75, 160, "fnt/VCR_OSD_MONO_1.001.ttf", 16, colorTexto);
 
     SDL_RenderCopy(juego->render, textTitulo, NULL, &destTitulo);
     SDL_RenderPresent(juego->render);
@@ -236,12 +237,14 @@ void dibujarMenu(tJuego* juego, tBotones* jugar, tBotones* config, tBotones* sal
     SDL_DestroyTexture(salir->textura);
     SDL_DestroyTexture(config->textura);
     SDL_DestroyTexture(ranking->textura);
+    SDL_DestroyTexture(ayuda->textura);
 
     TTF_CloseFont(titulo);
     TTF_CloseFont(jugar->fuente);
     TTF_CloseFont(config->fuente);
     TTF_CloseFont(salir->fuente);
     TTF_CloseFont(ranking->fuente);
+    TTF_CloseFont(ayuda->fuente);
 }
 
 void dibujarBotones(tBotones* boton, char* nombre, tJuego* juego, int x, int y, char* fuente, int tam, SDL_Color color)
@@ -288,34 +291,39 @@ void dibujarTextos(char* nombre, tJuego* juego, int x, int y, char* fuente, int 
 }
 
 
-void dibujarMenuConfig(tJuego* juego, tBotones* modos, tBotones* duracionInicial, tBotones* cantBotones, tBotones* atras)
+void dibujarMenuConfig(tJuego* juego, tBotones* modos, tBotones* duracionInicial, tBotones* cantBotones, tBotones* atras, tBotones* timbre)
 {
     SDL_Color colorTexto = {255, 255, 255, 240}; //blanco
-    dibujarBotones(modos, "Modos de juego", juego, 35, 70, "fnt/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf", 16, colorTexto);
-    dibujarBotones(duracionInicial, "Duracion Inicial", juego, 35, 90, "fnt/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf", 16, colorTexto);
-    dibujarBotones(cantBotones, "Cantidad de botones", juego, 35, 110, "fnt/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf", 12, colorTexto);
-    dibujarBotones(atras, "Atras", juego, 35, 140, "fnt/vcr_osd_mono/VCR_OSD_MONO_1.001.ttf", 16, colorTexto);
+
+    dibujarTextos("Configuracion", juego, 40, 30, "fnt/Aero.ttf", 18,colorTexto);
+    dibujarBotones(modos, "Modos de juego", juego, 35, 70, "fnt/VCR_OSD_MONO_1.001.ttf", 16, colorTexto);
+    dibujarBotones(duracionInicial, "Duracion Inicial", juego, 35, 85, "fnt/VCR_OSD_MONO_1.001.ttf", 16, colorTexto);
+    dibujarBotones(cantBotones, "Cantidad de botones", juego, 35, 105, "fnt/VCR_OSD_MONO_1.001.ttf", 12, colorTexto);
+    dibujarBotones(timbre, "Timbre", juego, 35, 115, "fnt/VCR_OSD_MONO_1.001.ttf", 16, colorTexto);
+    dibujarBotones(atras, "Atras", juego, 35, 150, "fnt/VCR_OSD_MONO_1.001.ttf", 16, colorTexto);
 
     SDL_RenderPresent(juego->render);
     SDL_DestroyTexture(modos->textura);
     SDL_DestroyTexture(duracionInicial->textura);
     SDL_DestroyTexture(cantBotones->textura);
     SDL_DestroyTexture(atras->textura);
+    SDL_DestroyTexture(timbre->textura);
 
     TTF_CloseFont(modos->fuente);
     TTF_CloseFont(duracionInicial->fuente);
     TTF_CloseFont(cantBotones->fuente);
     TTF_CloseFont(atras->fuente);
+    TTF_CloseFont(timbre->fuente);
 
 }
 
 void dibujarMenuModos(tJuego* juego, tBotones* modoSchonberg, tBotones* modoMozart, tBotones* modoDesafio, tBotones* atras)
 {
     SDL_Color colorTexto = {255, 255, 255, 240}; //blanco
-    dibujarBotones(modoSchonberg, "Modo Schonberg", juego, 35, 70, "fnt/porky_s/porkys_.ttf", 16, colorTexto);
-    dibujarBotones(modoMozart, "Modo Mozart", juego, 35, 90, "fnt/porky_s/porkys_.ttf", 16, colorTexto);
-    dibujarBotones(modoDesafio, "Modo Desafio", juego, 35, 110, "fnt/porky_s/porkys_.ttf", 16, colorTexto);
-    dibujarBotones(atras, "Atras", juego, 35, 140, "fnt/porky_s/porkys_.ttf", 16, colorTexto);
+    dibujarBotones(modoSchonberg, "Modo Schonberg", juego, 35, 70, "fnt/porkys_.ttf", 16, colorTexto);
+    dibujarBotones(modoMozart, "Modo Mozart", juego, 35, 90, "fnt/porkys_.ttf", 16, colorTexto);
+    dibujarBotones(modoDesafio, "Modo Desafio", juego, 35, 110, "fnt/porkys_.ttf", 16, colorTexto);
+    dibujarBotones(atras, "Atras", juego, 35, 140, "fnt/porkys_.ttf", 16, colorTexto);
 
     SDL_RenderPresent(juego->render);
     SDL_DestroyTexture(modoSchonberg->textura);
@@ -333,13 +341,13 @@ void dibujarMenuModos(tJuego* juego, tBotones* modoSchonberg, tBotones* modoMoza
 void dibujarMenuBotones(tJuego* juego, tBotones* b3, tBotones* b4, tBotones* b5, tBotones* b6, tBotones* b7, tBotones* b8, tBotones* atras)
 {
     SDL_Color colorTexto = {255, 255, 255, 240}; //blanco
-    dibujarBotones(b3, "3", juego, 70, 30, "fnt/dimitri/dimitri_.ttf", 30, colorTexto);
-    dibujarBotones(b4, "4", juego, 120, 30, "fnt/dimitri/dimitri_.ttf", 30, colorTexto);
-    dibujarBotones(b5, "5", juego, 70, 80, "fnt/dimitri/dimitri_.ttf", 30, colorTexto);
-    dibujarBotones(b6, "6", juego, 120, 80, "fnt/dimitri/dimitri_.ttf", 30, colorTexto);
-    dibujarBotones(b7, "7", juego, 70, 130, "fnt/dimitri/dimitri_.ttf", 30, colorTexto);
-    dibujarBotones(b8, "8", juego, 120, 130, "fnt/dimitri/dimitri_.ttf", 30, colorTexto);
-    dibujarBotones(atras, "Atras", juego, 25, 160, "fnt/porky_s/porkys_.ttf", 16, colorTexto);
+    dibujarBotones(b3, "3", juego, 70, 30, "fnt/dimitri_.ttf", 30, colorTexto);
+    dibujarBotones(b4, "4", juego, 120, 30, "fnt/dimitri_.ttf", 30, colorTexto);
+    dibujarBotones(b5, "5", juego, 70, 80, "fnt/dimitri_.ttf", 30, colorTexto);
+    dibujarBotones(b6, "6", juego, 120, 80, "fnt/dimitri_.ttf", 30, colorTexto);
+    dibujarBotones(b7, "7", juego, 70, 130, "fnt/dimitri_.ttf", 30, colorTexto);
+    dibujarBotones(b8, "8", juego, 120, 130, "fnt/dimitri_.ttf", 30, colorTexto);
+    dibujarBotones(atras, "Atras", juego, 25, 160, "fnt/porkys_.ttf", 16, colorTexto);
 
     SDL_RenderPresent(juego->render);
     SDL_DestroyTexture(b3->textura);
@@ -363,12 +371,12 @@ void dibujarMenuBotones(tJuego* juego, tBotones* b3, tBotones* b4, tBotones* b5,
 void dibujarMenuDuracion(tJuego* juego, tBotones* d1000, tBotones* d1500, tBotones* d2000, tBotones* atras)
 {
     SDL_Color colorTexto = {255, 255, 255, 240}; //blanco
-    dibujarTextos("Dificultad:", juego, 50, 25, "fnt/aero_2/Aero.ttf", 18, colorTexto);
-    dibujarTextos("Duracion inicial", juego, 40, 40, "fnt/aero_2/Aero.ttf", 16, colorTexto);
-    dibujarBotones(d2000, "Facil: 2000ms", juego, 35, 80, "fnt/dimitri/dimitri_.ttf", 14, colorTexto);
-    dibujarBotones(d1500, "Media: 1500ms", juego, 35, 100, "fnt/dimitri/dimitri_.ttf", 14, colorTexto);
-    dibujarBotones(d1000, "Pro: 1000ms", juego, 35, 120, "fnt/dimitri/dimitri_.ttf", 14, colorTexto);
-    dibujarBotones(atras, "Atras", juego, 25, 160, "fnt/porky_s/porkys_.ttf", 14, colorTexto);
+    dibujarTextos("Dificultad:", juego, 50, 25, "fnt/Aero.ttf", 18, colorTexto);
+    dibujarTextos("Duracion inicial", juego, 40, 40, "fnt/Aero.ttf", 16, colorTexto);
+    dibujarBotones(d2000, "Facil: 2000ms", juego, 35, 80, "fnt/dimitri_.ttf", 14, colorTexto);
+    dibujarBotones(d1500, "Media: 1500ms", juego, 35, 100, "fnt/dimitri_.ttf", 14, colorTexto);
+    dibujarBotones(d1000, "Pro: 1000ms", juego, 35, 120, "fnt/dimitri_.ttf", 14, colorTexto);
+    dibujarBotones(atras, "Atras", juego, 25, 160, "fnt/porkys_.ttf", 14, colorTexto);
 
     SDL_RenderPresent(juego->render);
     SDL_DestroyTexture(d2000->textura);
@@ -382,3 +390,24 @@ void dibujarMenuDuracion(tJuego* juego, tBotones* d1000, tBotones* d1500, tBoton
     TTF_CloseFont(atras->fuente);
 }
 
+void dibujarMenuAyuda(tJuego* juego, tBotones* atras)
+{
+    SDL_Color colorTexto = {255, 255, 255, 240}; //blanco
+    dibujarTextos("AYUDA:", juego, 60, 15, "fnt/porkys_.ttf", 18, colorTexto);
+    dibujarTextos("Para utilizar el Modo Mozart:", juego, 20, 45, "fnt/roboto-black.ttf", 12, colorTexto);
+    dibujarTextos("Es necesario, a la hora de ", juego, 20, 55, "fnt/roboto-black.ttf", 10, colorTexto);
+    dibujarTextos("crear el archivo con la melodia,", juego, 20, 65, "fnt/roboto-black.ttf", 10, colorTexto);
+    dibujarTextos("ponerles como nombre", juego, 20, 75, "fnt/roboto-black.ttf", 10, colorTexto);
+    dibujarTextos("(dependiendo de la", juego, 20, 85, "fnt/roboto-black.ttf", 10, colorTexto);
+    dibujarTextos("cantidad de botones):", juego, 20, 95, "fnt/roboto-black.ttf", 10, colorTexto);
+    dibujarTextos("'melodia#.txt' siendo # ", juego, 20, 105, "fnt/roboto-black.ttf", 10, colorTexto);
+    dibujarTextos("la cantidad de botones en los", juego, 20, 115, "fnt/roboto-black.ttf", 10, colorTexto);
+    dibujarTextos("que se utilizara dicha melodia.", juego, 20, 125, "fnt/roboto-black.ttf", 10, colorTexto);
+    dibujarTextos("Ejemplo: 'melodia3.txt'", juego, 20, 145, "fnt/roboto-black.ttf", 10, colorTexto);
+    dibujarBotones(atras, "Atras", juego, 25, 160, "fnt/porkys_.ttf", 14, colorTexto);
+
+    SDL_RenderPresent(juego->render);
+
+    SDL_DestroyTexture(atras->textura);
+    TTF_CloseFont(atras->fuente);
+}

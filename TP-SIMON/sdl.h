@@ -25,6 +25,9 @@
 #define MODO_DESAFIO 10
 #define BOTONES_DESAFIO 11
 #define GRABANDO 12
+#define TIMBRE_OPCIONES 13
+#define AYUDA 14
+#define ERROR_MOZART 15
 
 typedef enum
 {

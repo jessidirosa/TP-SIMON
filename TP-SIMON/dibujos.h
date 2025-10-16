@@ -27,14 +27,15 @@ int** crearMatriz(int cf, int cc, size_t tam);
 void dibujarBordes(tJuego* juego);
 void iluminarBoton(int boton, tJuego* juego, int** mat);
 void apagarBoton(int boton, tJuego* juego, int** mat);
-void dibujarMenu(tJuego* juego, tBotones* jugar, tBotones* config, tBotones* salir, tBotones* ranking);
+void dibujarMenu(tJuego* juego, tBotones* jugar, tBotones* config, tBotones* salir, tBotones* ranking, tBotones* ayuda);
 void dibujarBotonCentro(tJuego* juego, tBotones* boton, char* nombre);
-void dibujarMenuConfig(tJuego* juego, tBotones* modos, tBotones* duracionInicial, tBotones* cantBotones, tBotones* atras);
+void dibujarMenuConfig(tJuego* juego, tBotones* modos, tBotones* duracionInicial, tBotones* cantBotones, tBotones* atras, tBotones* timbre);
 void dibujarBotones(tBotones* boton, char* nombre, tJuego* juego, int x, int y, char* fuente, int tam, SDL_Color color);
 void dibujarMenuModos(tJuego* juego, tBotones* modoSchonberg, tBotones* modoMozart, tBotones* modoDesafio, tBotones* atras);
 void dibujarMenuBotones(tJuego* juego, tBotones* b3, tBotones* b4, tBotones* b5, tBotones* b6, tBotones* b7, tBotones* b8, tBotones* atras);
 void dibujarTextos(char* nombre, tJuego* juego, int x, int y, char* fuente, int tam, SDL_Color color);
 void dibujarMenuDuracion(tJuego* juego, tBotones* d1000, tBotones* d1500, tBotones* d2000, tBotones* atras);
+void dibujarMenuAyuda(tJuego* juego, tBotones* atras);
 
 //void dibujarMenuPausa(tJuego* juego, tBotones* reanudar, tBotones* volverAInicio);
 
